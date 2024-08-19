@@ -1,4 +1,5 @@
 ﻿using CleanArch.Application.Interfaces;
+using CleanArch.Core.Entities.PagingData;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
@@ -36,6 +37,23 @@ namespace CleanArch.Infrastructure.Base
                 catch (Exception ex) { }
 
                 return rowsEffected > 0 ? true : false;
+            }
+        }
+
+        public async Task<PagingData<T>> GetPaging(string sql, object parameters = null, CommandType commandType = CommandType.Text)
+        {
+            PagingData<T> result = new PagingData<T>();
+            using (IDbConnection db = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                db.Open();
+
+                using (var multi = await db.QueryMultipleAsync(sql, parameters, commandType: commandType))
+                {
+                    result.Data = (await Task.Run(() => multi.Read<T>())).ToList();
+                    result.TotalRecord = ((await Task.Run(() => multi.Read<int>())).ToList()).FirstOrDefault();
+
+                    return result;
+                }
             }
         }
 

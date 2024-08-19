@@ -1,0 +1,12 @@
+D:\New folder\CleanArch\Hso\bin\Debug\net35\Assembly-CSharp.dll
+D:\New folder\CleanArch\Hso\bin\Debug\net35\Assembly-CSharp.pdb
+D:\New folder\CleanArch\Hso\bin\Debug\net35\UnityEngine.dll
+D:\New folder\CleanArch\Hso\bin\Debug\net35\UnityEngine.UI.dll
+D:\New folder\CleanArch\Hso\bin\Debug\net35\UnityEngine.xml
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.csproj.AssemblyReference.cache
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.GeneratedMSBuildEditorConfig.editorconfig
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.csproj.CoreCompileInputs.cache
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.sourcelink.json
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly.44154EF1.Up2Date
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.dll
+D:\New folder\CleanArch\Hso\obj\Debug\net35\Assembly-CSharp.pdb

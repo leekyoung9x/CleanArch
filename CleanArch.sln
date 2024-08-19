@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArch.Sql", "CleanArch.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArch.Logging", "CleanArch.Logging\CleanArch.Logging.csproj", "{C780A50E-5DBE-4588-9BB0-F5CD5BAA5470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArch.Test", "CleanArch.Test\CleanArch.Test.csproj", "{C003F5F0-CD3D-4608-8E7F-6E8055CF191E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArch.Test", "CleanArch.Test\CleanArch.Test.csproj", "{C003F5F0-CD3D-4608-8E7F-6E8055CF191E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assembly-CSharp", "Hso\Assembly-CSharp.csproj", "{B333EFA6-1E2B-4FBF-A8DB-343C66B0BC79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{C003F5F0-CD3D-4608-8E7F-6E8055CF191E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C003F5F0-CD3D-4608-8E7F-6E8055CF191E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C003F5F0-CD3D-4608-8E7F-6E8055CF191E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B333EFA6-1E2B-4FBF-A8DB-343C66B0BC79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B333EFA6-1E2B-4FBF-A8DB-343C66B0BC79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B333EFA6-1E2B-4FBF-A8DB-343C66B0BC79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B333EFA6-1E2B-4FBF-A8DB-343C66B0BC79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

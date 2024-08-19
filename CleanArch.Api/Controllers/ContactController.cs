@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace CleanArch.Api.Controllers
 {
-    public class ContactController : BaseApiController
+    public class ContactController : BaseApiController<Contact>
     {
         #region ===[ Private Members ]=============================================================
 
@@ -30,7 +30,7 @@ namespace CleanArch.Api.Controllers
         #region ===[ Public Methods ]==============================================================
 
         [HttpGet]
-        public async Task<ApiResponse<List<Contact>>> GetAll()
+        public override async Task<ApiResponse<List<Contact>>> GetAll()
         {
             var apiResponse = new ApiResponse<List<Contact>>();
 
