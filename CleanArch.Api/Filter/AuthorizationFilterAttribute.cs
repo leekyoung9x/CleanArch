@@ -28,29 +28,29 @@ namespace CleanArch.Api.Filter
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var apiKeyHeader = context.HttpContext.Request.Headers["Authorization"].ToString();
-            var authController = new Controllers.AuthController();
+            //var authController = new Controllers.AuthController();
 
-            if (apiKeyHeader.Any())
-            {
-                var keys = new List<string>
-                {
-                    _apiKey
-                };
+            //if (apiKeyHeader.Any())
+            //{
+            //    var keys = new List<string>
+            //    {
+            //        _apiKey
+            //    };
 
-                if (_canUseSecondaryApiKey)
-                {
-                    keys.AddRange(_apiKeySecondary.Split(','));
-                }
+            //    if (_canUseSecondaryApiKey)
+            //    {
+            //        keys.AddRange(_apiKeySecondary.Split(','));
+            //    }
 
-                if (keys.FindIndex(x => x.Equals(apiKeyHeader, StringComparison.OrdinalIgnoreCase)) == -1)
-                {
-                    context.Result = authController.NotAuthorized();
-                }
-            }
-            else
-            {
-                context.Result = authController.NotAuthorized();
-            }
+            //    if (keys.FindIndex(x => x.Equals(apiKeyHeader, StringComparison.OrdinalIgnoreCase)) == -1)
+            //    {
+            //        context.Result = authController.NotAuthorized();
+            //    }
+            //}
+            //else
+            //{
+            //    context.Result = authController.NotAuthorized();
+            //}
         }
 
         #endregion

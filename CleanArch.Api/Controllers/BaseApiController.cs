@@ -1,11 +1,12 @@
 using CleanArch.Api.Filter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.Api.Controllers
 {
     [Route("api/[controller]")]
-    [TypeFilter(typeof(AuthorizationFilterAttribute))]
     [ApiController]
+    [Authorize]
     public class BaseApiController : ControllerBase
     {
     }
