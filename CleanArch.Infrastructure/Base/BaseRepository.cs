@@ -112,7 +112,7 @@ namespace CleanArch.Infrastructure.Base
                 }
                 catch (Exception ex) { }
 
-                return result; 
+                return result;
             }
         }
 
@@ -148,7 +148,7 @@ namespace CleanArch.Infrastructure.Base
                 }
                 catch (Exception ex) { }
 
-                return rowsEffected > 0 ? true : false; 
+                return rowsEffected > 0 ? true : false;
             }
         }
 

@@ -13,7 +13,7 @@ namespace CleanArch.Api.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
 
-        #endregion
+        #endregion ===[ Private Members ]=============================================================
 
         #region ===[ Constructor ]=================================================================
 
@@ -25,7 +25,7 @@ namespace CleanArch.Api.Controllers
             this._unitOfWork = unitOfWork;
         }
 
-        #endregion
+        #endregion ===[ Constructor ]=================================================================
 
         #region ===[ Public Methods ]==============================================================
 
@@ -59,7 +59,6 @@ namespace CleanArch.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ApiResponse<Contact>> GetById(int id)
         {
-
             var apiResponse = new ApiResponse<Contact>();
 
             try
@@ -165,6 +164,6 @@ namespace CleanArch.Api.Controllers
             return apiResponse;
         }
 
-        #endregion
+        #endregion ===[ Public Methods ]==============================================================
     }
 }

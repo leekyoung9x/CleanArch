@@ -15,16 +15,16 @@ namespace CleanArch.Infrastructure.Repository
 
         private readonly IConfiguration configuration;
 
-        #endregion
+        #endregion ===[ Private Members ]=============================================================
 
         #region ===[ Constructor ]=================================================================
 
-        public ContactRepository(IConfiguration configuration): base(configuration)
+        public ContactRepository(IConfiguration configuration) : base(configuration)
         {
             this.configuration = configuration;
         }
 
-        #endregion
+        #endregion ===[ Constructor ]=================================================================
 
         #region ===[ IContactRepository Methods ]==================================================
 
@@ -78,6 +78,6 @@ namespace CleanArch.Infrastructure.Repository
             }
         }
 
-        #endregion
+        #endregion ===[ IContactRepository Methods ]==================================================
     }
 }

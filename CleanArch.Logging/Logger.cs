@@ -1,5 +1,4 @@
 ﻿using log4net;
-using log4net.Core;
 using System.Reflection;
 
 namespace CleanArch.Logging
@@ -19,7 +18,7 @@ namespace CleanArch.Logging
         private const string ExceptionMessageWithoutInnerException = "{0}{1}: {2}Message: {3}{4}StackTrace: {5}.";
         private const string ExceptionMessageWithInnerException = "{0}{1}{2}";
 
-        #endregion
+        #endregion ===[ Private Members ]=============================================================
 
         #region ===[ Properties ]==================================================================
 
@@ -31,7 +30,7 @@ namespace CleanArch.Logging
             get { return _loggerInstance.Value; }
         }
 
-        #endregion
+        #endregion ===[ Properties ]==================================================================
 
         #region ===[ ILogger Members ]=============================================================
 
@@ -154,7 +153,7 @@ namespace CleanArch.Logging
             _logger.Fatal(SerializeException(exception, ExceptionName));
         }
 
-        #endregion
+        #endregion ===[ ILogger Members ]=============================================================
 
         #region ===[ Public Methods ]==============================================================
 
@@ -168,7 +167,7 @@ namespace CleanArch.Logging
             return SerializeException(exception, string.Empty);
         }
 
-        #endregion
+        #endregion ===[ Public Methods ]==============================================================
 
         #region ===[ Private Methods ]=============================================================
 
@@ -193,6 +192,6 @@ namespace CleanArch.Logging
             return mesgAndStackTrace + Environment.NewLine;
         }
 
-        #endregion
+        #endregion ===[ Private Methods ]=============================================================
     }
 }

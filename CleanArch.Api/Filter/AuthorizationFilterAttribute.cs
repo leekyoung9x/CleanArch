@@ -10,7 +10,7 @@ namespace CleanArch.Api.Filter
         private readonly string _apiKeySecondary;
         private readonly bool _canUseSecondaryApiKey;
 
-        #endregion
+        #endregion ===[ Private Members ]=============================================================
 
         #region ===[ Constructor ]=================================================================
 
@@ -21,7 +21,7 @@ namespace CleanArch.Api.Filter
             _canUseSecondaryApiKey = configuration["SecretKeys:UseSecondaryKey"] == "True";
         }
 
-        #endregion
+        #endregion ===[ Constructor ]=================================================================
 
         #region ===[ Public Methods ]==============================================================
 
@@ -53,6 +53,6 @@ namespace CleanArch.Api.Filter
             //}
         }
 
-        #endregion
+        #endregion ===[ Public Methods ]==============================================================
     }
 }

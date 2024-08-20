@@ -22,7 +22,7 @@ namespace CleanArch.Test.IntegrationTests
         private readonly ContactController _moqControllerObj;
         private readonly Mock<IUnitOfWork> _moqRepo;
 
-        #endregion
+        #endregion ===[ Private Members ]=============================================================
 
         #region ===[ Constructor ]=================================================================
 
@@ -44,7 +44,7 @@ namespace CleanArch.Test.IntegrationTests
             _moqControllerObj = new ContactController(_moqRepo.Object);
         }
 
-        #endregion
+        #endregion ===[ Constructor ]=================================================================
 
         #region ===[ Test Methods ]================================================================
 
@@ -162,7 +162,7 @@ namespace CleanArch.Test.IntegrationTests
             Assert.IsFalse(result.Success);
         }
 
-        #endregion
+        #endregion ===[ Test Methods ]================================================================
 
         #region ===[ Private Methods ]=============================================================
 
@@ -226,6 +226,6 @@ namespace CleanArch.Test.IntegrationTests
             Assert.IsTrue(result.Success);
         }
 
-        #endregion
+        #endregion ===[ Private Methods ]=============================================================
     }
 }

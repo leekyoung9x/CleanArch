@@ -1,9 +1,7 @@
-﻿using System.Net.Http;
+﻿using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ResponseModel;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using CleanArch.Core.Entities.RequestModel;
-using CleanArch.Core.Entities.ResponseModel;
 
 namespace CleanArch.Api.Services
 {
@@ -24,17 +22,17 @@ namespace CleanArch.Api.Services
             var apiKey = _configuration["ReCaptcha:APIKey"];
             var httpClient = _httpClientFactory.CreateClient();
 
-             var recaptchaRequest = new RecaptchaRequest
+            var recaptchaRequest = new RecaptchaRequest
+            {
+                Event = new EventData
                 {
-                    Event = new EventData
-                    {
-                        Token = token,
-                        ExpectedAction = "Login",
-                        SiteKey = siteKey
-                    }
-                };
+                    Token = token,
+                    ExpectedAction = "Login",
+                    SiteKey = siteKey
+                }
+            };
 
-             var json = JsonSerializer.Serialize(recaptchaRequest, new JsonSerializerOptions
+            var json = JsonSerializer.Serialize(recaptchaRequest, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
@@ -46,7 +44,7 @@ namespace CleanArch.Api.Services
 
             // Deserialize JSON thành ReCaptchaResponse
             var reCaptchaResponse = JsonSerializer.Deserialize<ResponseCaptcha>(jsonString);
-            
+
             return reCaptchaResponse;
         }
     }

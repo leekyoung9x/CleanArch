@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CleanArch.Core.Entities.RequestModel 
+namespace CleanArch.Core.Entities.RequestModel
 {
     public class EventData
     {
