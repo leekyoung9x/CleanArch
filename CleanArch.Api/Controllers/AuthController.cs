@@ -18,14 +18,14 @@ namespace CleanArch.Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<object> Login([FromBody] LoginModel model)
         {
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-            var isCaptchaValid = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (!isCaptchaValid)
+            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
+            if (recaptchaResponse != null)
             {
-                return BadRequest("reCAPTCHA validation failed");
+                return recaptchaResponse;
             }
 
             var authService = _serviceProvider.GetRequiredService<IAuthService>();

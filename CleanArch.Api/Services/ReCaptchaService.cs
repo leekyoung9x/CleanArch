@@ -1,4 +1,9 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ResponseModel;
 
 namespace CleanArch.Api.Services
 {
@@ -13,21 +18,36 @@ namespace CleanArch.Api.Services
             _configuration = configuration;
         }
 
-        public async Task<bool> VerifyTokenAsync(string token)
+        public async Task<ResponseCaptcha> VerifyTokenAsync(string token)
         {
-            var secretKey = _configuration["ReCaptcha:SecretKey"];
+            var siteKey = _configuration["ReCaptcha:SiteKey"];
+            var apiKey = _configuration["ReCaptcha:APIKey"];
             var httpClient = _httpClientFactory.CreateClient();
 
-            var response = await httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={token}", null);
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var jsonResponse = JsonDocument.Parse(jsonString);
+             var recaptchaRequest = new RecaptchaRequest
+                {
+                    Event = new EventData
+                    {
+                        Token = token,
+                        ExpectedAction = "Login",
+                        SiteKey = siteKey
+                    }
+                };
 
-            if (jsonResponse.RootElement.GetProperty("success").GetBoolean())
+             var json = JsonSerializer.Serialize(recaptchaRequest, new JsonSerializerOptions
             {
-                var score = jsonResponse.RootElement.GetProperty("score").GetDouble();
-                return score > 0.5; // Chỉ chấp nhận nếu score > 0.5
-            }
-            return false;
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync($"https://recaptchaenterprise.googleapis.com/v1/projects/dragonboy-a56f7/assessments?key={apiKey}", jsonContent);
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            // Deserialize JSON thành ReCaptchaResponse
+            var reCaptchaResponse = JsonSerializer.Deserialize<ResponseCaptcha>(jsonString);
+            
+            return reCaptchaResponse;
         }
     }
 }
