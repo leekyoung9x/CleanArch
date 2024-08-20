@@ -35,8 +35,9 @@ namespace CleanArch.Test.IntegrationTests
                                                       .AddJsonFile("appsettings.json")
                                                       .Build();
 
-            var repository = new ContactRepository(_configuration);
-            var unitofWork = new UnitOfWork(repository);
+            var contactRepository = new ContactRepository(_configuration);
+            var accountRepository = new AccountRepository(_configuration);
+            var unitofWork = new UnitOfWork(contactRepository, accountRepository);
 
             _controllerObj = new ContactController(unitofWork);
 

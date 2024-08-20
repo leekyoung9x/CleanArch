@@ -1,4 +1,5 @@
 ﻿using CleanArch.Api.DependencyInjection;
+using CleanArch.Api.Filter;
 using CleanArch.Infrastructure;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,6 +89,8 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandlingMiddleware(); // Thêm middleware vào pipeline
 
 // Sử dụng middleware CORS
 app.UseCors("AllowAll");

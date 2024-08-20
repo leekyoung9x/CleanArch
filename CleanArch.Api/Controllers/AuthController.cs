@@ -1,5 +1,6 @@
 ﻿using CleanArch.Api.Filter;
 using CleanArch.Api.Services;
+using CleanArch.Application.Interfaces;
 using CleanArch.Core.Entities.RequestModel;
 using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,23 @@ namespace CleanArch.Api.Controllers
             if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
             {
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
+                var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
 
-                result.Status = true;
-                result.Data = authService.GenerateToken("admin");
+                var account = await accountRepository.Login(model.username, model.password);
+
+                if (account != null)
+                {
+                    result.Status = true;
+                    result.Data = authService.GenerateToken(account);
+                    result.StatusMessage = "Đăng nhập thành công";
+                }
+                else
+                {
+                    result.Status = false;
+                    result.StatusMessage = "Tài khoản và mật khẩu không chính xác";
+                }
+
+                
             } 
             else
             {
@@ -47,6 +62,7 @@ namespace CleanArch.Api.Controllers
         public IActionResult CheckToken([FromQuery] string token)
         {
             string result = "";
+
             var tokenValidator = new TokenValidator(_configuration["Jwt:Key"], _configuration["Jwt:Issuer"], _configuration["Jwt:Audience"]);
 
             var principal = tokenValidator.ValidateToken(token);

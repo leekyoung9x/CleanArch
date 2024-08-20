@@ -12,7 +12,7 @@ namespace CleanArch.Infrastructure.Base
 {
     public class BaseRepository<T> : IRepository<T> where T : class
     {
-        private readonly IConfiguration configuration;
+        protected readonly IConfiguration configuration;
 
         public BaseRepository(IConfiguration configuration)
         {
@@ -152,7 +152,7 @@ namespace CleanArch.Infrastructure.Base
             }
         }
 
-        private string GetTableName()
+        protected string GetTableName()
         {
             string tableName = "";
             var type = typeof(T);

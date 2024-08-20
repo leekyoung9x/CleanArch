@@ -1,7 +1,9 @@
-﻿namespace CleanArch.Api.Services
+﻿using CleanArch.Core.Entities;
+
+namespace CleanArch.Api.Services
 {
     public interface IAuthService
     {
-        string GenerateToken(string userName);
+        string GenerateToken(account model);
     }
 }
