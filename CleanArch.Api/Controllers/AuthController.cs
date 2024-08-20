@@ -1,6 +1,7 @@
 ﻿using CleanArch.Api.Filter;
 using CleanArch.Api.Services;
 using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArch.Api.Controllers
@@ -18,20 +19,28 @@ namespace CleanArch.Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<object> Login([FromBody] LoginModel model)
+        public async Task<ServiceResult> Login([FromBody] LoginModel model)
         {
+            ServiceResult result = new ServiceResult();
+
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
             var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null)
+            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
             {
-                return recaptchaResponse;
+                var authService = _serviceProvider.GetRequiredService<IAuthService>();
+
+                result.Status = true;
+                result.Data = authService.GenerateToken("admin");
+            } 
+            else
+            {
+                result.Status = false;
+                result.StatusMessage = "Captcha không hợp lệ";
             }
 
-            var authService = _serviceProvider.GetRequiredService<IAuthService>();
-
             // Handle form submission
-            return Ok(authService.GenerateToken("admin"));
+            return result;
         }
 
         [HttpPost("CheckToken")]
