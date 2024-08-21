@@ -22,10 +22,8 @@ namespace CleanArch.Api.Services
 
             var claims = new[]
             {
+                new Claim("id", model.id.ToString()),
                 new Claim("Username", model.username),
-                new Claim("Vnd", model.vnd.ToString()),
-                new Claim("Role", model.role.ToString()),
-                new Claim("Status", model.active.ToString()),
                 new Claim("Createtime", model.create_time.ToString()),
             };
 

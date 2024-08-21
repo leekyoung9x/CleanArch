@@ -37,7 +37,8 @@ namespace CleanArch.Test.IntegrationTests
 
             var contactRepository = new ContactRepository(_configuration);
             var accountRepository = new AccountRepository(_configuration);
-            var unitofWork = new UnitOfWork(contactRepository, accountRepository);
+            var rankRepository = new RankRepository(_configuration);
+            var unitofWork = new UnitOfWork(contactRepository, accountRepository, rankRepository);
 
             _controllerObj = new ContactController(unitofWork);
 
