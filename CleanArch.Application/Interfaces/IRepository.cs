@@ -1,4 +1,6 @@
-﻿namespace CleanArch.Application.Interfaces
+﻿using System.Data;
+
+namespace CleanArch.Application.Interfaces
 {
     public interface IRepository<T> where T : class
     {
@@ -11,5 +13,7 @@
         Task<bool> UpdateAsync(T entity);
 
         Task<bool> DeleteAsync(long id);
+
+        Task<bool> UpdateAsync(T entity, IDbConnection connection, IDbTransaction transaction);
     }
 }

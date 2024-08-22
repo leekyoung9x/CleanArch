@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CleanArch.Core.Entities.RequestModel
 {
-    public class ChangePasswordModel : BaseRequestModel
+    public class BankRequest : BaseRequestModel
     {
-        public string? password { get; set; }
-        public string? passwordnew { get; set; }
+        public int amount { get; set; }
+        public string? otp { get; set; }
     }
 }

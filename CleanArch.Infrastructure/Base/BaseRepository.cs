@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
 
@@ -150,6 +151,55 @@ namespace CleanArch.Infrastructure.Base
 
                 return rowsEffected > 0 ? true : false;
             }
+        }
+
+        public async Task<bool> UpdateAsync(T entity, IDbConnection connection, IDbTransaction transaction)
+        {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection), "Connection cannot be null.");
+            }
+
+            if (transaction == null)
+            {
+                throw new ArgumentNullException(nameof(transaction), "Transaction cannot be null.");
+            }
+
+            int rowsAffected = 0;
+
+            try
+            {
+                string tableName = GetTableName();
+                string keyColumn = GetKeyColumnName();
+                string keyProperty = GetKeyPropertyName();
+
+                StringBuilder query = new StringBuilder();
+                query.Append($"UPDATE {tableName} SET ");
+
+                foreach (var property in GetProperties(true))
+                {
+                    var columnAttr = property.GetCustomAttribute<ColumnAttribute>();
+
+                    string propertyName = property.Name;
+                    string columnName = columnAttr?.Name ?? propertyName; // Ensure columnAttr.Name is not null
+
+                    query.Append($"{columnName} = @{propertyName},");
+                }
+
+                query.Remove(query.Length - 1, 1); // Remove trailing comma
+
+                query.Append($" WHERE {keyColumn} = @{keyProperty}");
+
+                // Execute the update query
+                rowsAffected = await connection.ExecuteAsync(query.ToString(), entity, transaction);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it accordingly
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            return rowsAffected > 0;
         }
 
         protected string GetTableName()

@@ -1,6 +1,7 @@
 ﻿using CleanArch.Api.Filter;
 using CleanArch.Api.Services;
 using CleanArch.Application.Interfaces;
+using CleanArch.Core.Entities;
 using CleanArch.Core.Entities.RequestModel;
 using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Authorization;
@@ -72,21 +73,17 @@ namespace CleanArch.Api.Controllers
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
                 var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
 
-                // Lấy ClaimsPrincipal từ HttpContext
-                var user = HttpContext.User;
-
-                // Lấy claim từ ClaimsPrincipal
-                var claimValue = int.Parse(user.FindFirst("id")?.Value);
-                var account = await accountRepository.GetByIdAsync(claimValue);
+                account? account = await GetAccountByToken(accountRepository);
 
                 if (account.password == model.password)
                 {
-                    var success = await accountRepository.ChangePassword(claimValue, model.passwordnew);
+                    var success = await accountRepository.ChangePassword(account.id, model.passwordnew);
                     if (success)
                     {
                         result.Status = true;
                         result.StatusMessage = "Đổi mật khẩu thành công";
-                    } else
+                    }
+                    else
                     {
                         result.Status = false;
                         result.StatusMessage = "Đổi mật khẩu thất bại";
@@ -108,6 +105,18 @@ namespace CleanArch.Api.Controllers
 
             // Handle form submission
             return result;
+        }
+
+        private async Task<account> GetAccountByToken(IAccountRepository accountRepository)
+        {
+            // Lấy ClaimsPrincipal từ HttpContext
+            var user = HttpContext.User;
+
+            // Lấy claim từ ClaimsPrincipal
+            int claimValue = int.Parse(user.FindFirst("id")?.Value);
+            var account = await accountRepository.GetByIdAsync(claimValue);
+
+            return account;
         }
 
         [HttpPost("Register")]

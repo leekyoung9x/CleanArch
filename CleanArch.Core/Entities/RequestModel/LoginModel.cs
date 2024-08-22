@@ -1,9 +1,8 @@
 ﻿namespace CleanArch.Core.Entities.RequestModel
 {
-    public class LoginModel
+    public class LoginModel : BaseRequestModel
     {
-        public string username { get; set; }
-        public string password { get; set; }
-        public string token { get; set; }
+        public string? username { get; set; }
+        public string? password { get; set; }
     }
 }

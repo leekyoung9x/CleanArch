@@ -9,9 +9,9 @@ namespace CleanArch.Infrastructure
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddTransient<IContactRepository, ContactRepository>();
             services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IRankRepository, RankRepository>();
+            services.AddTransient<ITransactionBanking, TransactionBanking>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
