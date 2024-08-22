@@ -99,7 +99,7 @@ namespace CleanArch.Api.Controllers
 
                         if (account != null)
                         {
-                            account.vnd += (int)trans.amount;
+                            account.vnd += (int)(trans.amount * 110 / 100);
 
                             using (IDbConnection connection = new MySqlConnection(_configuration.GetConnectionString("DBConnection")))
                             {
