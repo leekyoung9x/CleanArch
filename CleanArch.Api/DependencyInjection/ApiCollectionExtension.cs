@@ -9,6 +9,8 @@ namespace CleanArch.Api.DependencyInjection
             services.AddTransient<IAuthService, AuthService>();
             services.AddHttpClient();
             services.AddScoped<IReCaptchaService, ReCaptchaService>();
+            services.AddScoped<IBankService, BankService>();
+            services.AddScoped<ICardService, CardService>();
             services.AddControllers();
         }
     }
