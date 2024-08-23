@@ -4,15 +4,15 @@ namespace CleanArch.Infrastructure.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(IContactRepository contactRepository, IAccountRepository accounts, IRankRepository ranks)
+        public UnitOfWork(IAccountRepository accounts, IRankRepository ranks, ITransactionBanking transactionBanking)
         {
-            Contacts = contactRepository;
             Accounts = accounts;
             Ranks = ranks;
+            TransactionBanking = transactionBanking;
         }
 
-        public IContactRepository Contacts { get; set; }
         public IAccountRepository Accounts { get; set; }
         public IRankRepository Ranks { get; set; }
+        public ITransactionBanking TransactionBanking { get; set; }
     }
 }

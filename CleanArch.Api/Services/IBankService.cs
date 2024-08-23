@@ -5,6 +5,6 @@ namespace CleanArch.Api.Services
 {
     public interface IBankService
     {
-        Task<TransactionResponse> GetBankHistory();
+        Task<TransactionResponse> GetHistoryTransfer();
     }
 }

@@ -97,5 +97,22 @@ namespace CleanArch.Infrastructure.Repository
                 return result > 0;
             }
         }
+
+        public async Task<int> GetPlayerIdByAccountId(int id)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                string tableName = GetTableName();
+                string keyColumn = GetKeyColumnName();
+                string query = $"SELECT b.id FROM {tableName} a INNER JOIN player b ON a.id = b.account_id WHERE a.id = @id";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    id = id,
+                });
+
+                return result;
+            }
+        }
     }
 }

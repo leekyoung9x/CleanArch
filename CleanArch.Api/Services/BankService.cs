@@ -15,22 +15,31 @@ namespace CleanArch.Api.Services
             _configuration = configuration;
         }
 
-        public async Task<TransactionResponse> GetBankHistory()
+        public async Task<TransactionResponse> GetHistoryTransfer()
         {
-            var accountNumber = _configuration["Banking:AccountNumber"];
-            var password = _configuration["Banking:Password"];
-            var token = _configuration["Banking:Token"];
-            var baseURL = _configuration["Banking:BaseURL"];
-            var actionBanking = _configuration["Banking:ActionBanking"];
-            var httpClient = _httpClientFactory.CreateClient();
+            var result = new TransactionResponse();
 
-            var response = await httpClient.GetAsync($"{baseURL}/{actionBanking}/{password}/{accountNumber}/{token}");
-            var jsonString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var baseURL = _configuration["Bank:BaseURL"];
+                var action = _configuration["Bank:ACBAction"];
+                var accountNumber = _configuration["Bank:AccountNumber"];
+                var password = _configuration["Bank:Password"];
+                var token = _configuration["Bank:Token"];
 
-            // Deserialize JSON thành ReCaptchaResponse
-            var reCaptchaResponse = JsonSerializer.Deserialize<TransactionResponse>(jsonString);
+                var httpClient = _httpClientFactory.CreateClient();
 
-            return reCaptchaResponse;
+                var response = await httpClient.GetAsync($"{baseURL}/{action}/{password}/{accountNumber}/{token}");
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                // Deserialize JSON thành ReCaptchaResponse
+                result = JsonSerializer.Deserialize<TransactionResponse>(jsonString);
+            }
+            catch (Exception)
+            {
+            }
+
+            return result;
         }
     }
 }

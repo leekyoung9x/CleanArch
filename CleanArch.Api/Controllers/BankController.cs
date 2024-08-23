@@ -27,7 +27,7 @@ namespace CleanArch.Api.Controllers
             try
             {
                 var bankService = _serviceProvider.GetRequiredService<IBankService>();
-                var data = await bankService.GetBankHistory();
+                var data = await bankService.GetHistoryTransfer();
                 apiResponse.Success = true;
                 apiResponse.Result = data;
             }

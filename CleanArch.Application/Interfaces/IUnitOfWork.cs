@@ -2,7 +2,8 @@
 {
     public interface IUnitOfWork
     {
-        IContactRepository Contacts { get; }
+        IAccountRepository Accounts { get; }
         IRankRepository Ranks { get; }
+        ITransactionBanking TransactionBanking { get; }
     }
 }
