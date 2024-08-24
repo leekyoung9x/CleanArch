@@ -37,7 +37,7 @@ namespace CleanArch.Infrastructure.Repository
                 return result;
             }
         }
-        
+
         public async Task<List<rank>> GetPetPowerRank()
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))

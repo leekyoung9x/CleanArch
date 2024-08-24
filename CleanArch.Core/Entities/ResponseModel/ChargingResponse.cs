@@ -5,19 +5,19 @@ namespace CleanArch.Core.Entities.ResponseModel
     public class ChargingResponse
     {
         [JsonPropertyName("trans_id")]
-        public int TransId { get; set; }
+        public int? TransId { get; set; }
 
         [JsonPropertyName("request_id")]
         public string RequestId { get; set; }
 
         [JsonPropertyName("amount")]
-        public int Amount { get; set; }
+        public int? Amount { get; set; }
 
         [JsonPropertyName("value")]
         public int? Value { get; set; }
 
         [JsonPropertyName("declared_value")]
-        public int DeclaredValue { get; set; }
+        public string DeclaredValue { get; set; }
 
         [JsonPropertyName("telco")]
         public string Telco { get; set; }
@@ -29,10 +29,9 @@ namespace CleanArch.Core.Entities.ResponseModel
         public string Code { get; set; }
 
         [JsonPropertyName("status")]
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
         [JsonPropertyName("message")]
         public string Message { get; set; }
     }
 }
-

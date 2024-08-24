@@ -1,14 +1,9 @@
-using CleanArch.Api.Controllers;
 using CleanArch.Application.Interfaces;
-using CleanArch.Core.Entities;
 using CleanArch.Infrastructure.Repository;
-using CleanArch.Test.Helper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CleanArch.Test.IntegrationTests
 {

@@ -1,6 +1,6 @@
 namespace CleanArch.Core.Entities.RequestModel
 {
-    public class ChargingRequest
+    public class ChargingRequest : BaseRequestModel
     {
         public string Telco { get; set; }
         public string Code { get; set; }

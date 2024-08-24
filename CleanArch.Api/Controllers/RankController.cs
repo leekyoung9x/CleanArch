@@ -41,7 +41,7 @@ namespace CleanArch.Api.Controllers
 
             return apiResponse;
         }
-        
+
         [HttpGet("PetPower")]
         public async Task<ApiResponse<List<rank>>> GetPetPower()
         {

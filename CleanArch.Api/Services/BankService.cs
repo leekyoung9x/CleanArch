@@ -1,5 +1,4 @@
 using CleanArch.Core.Entities.ResponseModel;
-using System.Text;
 using System.Text.Json;
 
 namespace CleanArch.Api.Services

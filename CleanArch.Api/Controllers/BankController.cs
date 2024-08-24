@@ -1,10 +1,9 @@
 using CleanArch.Api.Models;
+using CleanArch.Api.Services;
 using CleanArch.Application.Interfaces;
-using CleanArch.Core.Entities;
+using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
-using CleanArch.Core.Entities.ResponseModel;
-using CleanArch.Api.Services;
 
 namespace CleanArch.Api.Controllers
 {
@@ -23,7 +22,7 @@ namespace CleanArch.Api.Controllers
         public async Task<ApiResponse<TransactionResponse>> GetBankHistory()
         {
             var apiResponse = new ApiResponse<TransactionResponse>();
-            
+
             try
             {
                 var bankService = _serviceProvider.GetRequiredService<IBankService>();

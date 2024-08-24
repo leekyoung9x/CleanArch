@@ -1,6 +1,5 @@
-using CleanArch.Core.Entities;
-using CleanArch.Core.Entities.ResponseModel;
 using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ResponseModel;
 
 namespace CleanArch.Api.Services
 {

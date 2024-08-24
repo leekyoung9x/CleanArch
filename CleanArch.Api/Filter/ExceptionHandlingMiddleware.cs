@@ -33,7 +33,8 @@ namespace CleanArch.Api.Filter
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
 
-            var response = new ServiceResult() {
+            var response = new ServiceResult()
+            {
                 Status = false,
                 StatusMessage = exception.Message,
                 Data = exception.StackTrace

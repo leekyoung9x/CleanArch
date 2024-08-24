@@ -12,10 +12,10 @@ namespace CleanArch.Core.Utils
             {
                 // Chuyển đổi chuỗi đầu vào thành một mảng byte
                 byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-                
+
                 // Tính toán giá trị băm MD5
                 byte[] hashBytes = md5.ComputeHash(inputBytes);
-                
+
                 // Chuyển đổi mảng byte thành chuỗi hexadecimal
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in hashBytes)
@@ -29,5 +29,3 @@ namespace CleanArch.Core.Utils
         }
     }
 }
-
-

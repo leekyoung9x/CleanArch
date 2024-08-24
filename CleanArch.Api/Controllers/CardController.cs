@@ -1,11 +1,11 @@
-using CleanArch.Api.Models;
+﻿using CleanArch.Api.Services;
 using CleanArch.Application.Interfaces;
-using CleanArch.Core.Entities;
+using CleanArch.Core.Entities.Constant;
+using CleanArch.Core.Entities.Enumeration;
+using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
-using CleanArch.Core.Entities.ResponseModel;
-using CleanArch.Core.Entities.RequestModel;
-using CleanArch.Api.Services;
 
 namespace CleanArch.Api.Controllers
 {
@@ -26,29 +26,53 @@ namespace CleanArch.Api.Controllers
         // }
 
         [HttpPost("chargingws")]
-        public async Task<ApiResponse<ChargingResponse>> ChargingWS([FromBody]ChargingRequest chargingRequest)
+        public async Task<ServiceResult> ChargingWS([FromBody] ChargingRequest chargingRequest)
         {
-            var apiResponse = new ApiResponse<ChargingResponse>();
-            
-            try
+            ServiceResult result = new ServiceResult();
+
+            var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
+
+            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(chargingRequest.token);
+            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
             {
                 var cardService = _serviceProvider.GetRequiredService<ICardService>();
                 var data = await cardService.ChargingWS(chargingRequest);
-                apiResponse.Success = true;
-                apiResponse.Result = data;
+
+                switch (data.Status)
+                {
+                    case (int)CardType.Success:
+                        result.StatusMessage = CardTypeName.Success;
+                        break;
+                    case (int)CardType.SuccessHalf:
+                        result.StatusMessage = CardTypeName.SuccessHalf;
+                        break;
+                    case (int)CardType.Error:
+                        result.StatusMessage = CardTypeName.Error;
+                        break;
+                    case (int)CardType.Maintain:
+                        result.StatusMessage = CardTypeName.Maintain;
+                        break;
+                    case (int)CardType.Pending:
+                        result.StatusMessage = CardTypeName.Pending;
+                        break;
+                    case (int)CardType.SendFail:
+                        result.StatusMessage = CardTypeName.SendFail;
+                        break;
+                    default:
+                        break;
+                }
+
+                result.Status = data.Status == (int)CardType.Success || data.Status == (int)CardType.SuccessHalf ? true : false;
+                result.Data = data;
             }
-            catch (SqlException ex)
+            else
             {
-                apiResponse.Success = false;
-                apiResponse.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                apiResponse.Success = false;
-                apiResponse.Message = ex.Message;
+                result.Status = false;
+                result.StatusMessage = "Captcha không hợp lệ";
             }
 
-            return apiResponse;
+            // Handle form submission
+            return result;
         }
     }
 }

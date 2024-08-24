@@ -47,8 +47,6 @@ namespace CleanArch.Api.Controllers
                     result.Status = false;
                     result.StatusMessage = "Tài khoản và mật khẩu không chính xác";
                 }
-
-
             }
             else
             {
@@ -94,8 +92,6 @@ namespace CleanArch.Api.Controllers
                     result.Status = false;
                     result.StatusMessage = "Mật khẩu hiện tại không chính xác";
                 }
-
-
             }
             else
             {
@@ -134,7 +130,7 @@ namespace CleanArch.Api.Controllers
 
                 var isExist = await accountRepository.IsExist(model.username);
 
-                if (isExist) 
+                if (isExist)
                 {
                     result.Status = false;
                     result.StatusMessage = "Tài khoản đã tồn tại";
@@ -156,8 +152,6 @@ namespace CleanArch.Api.Controllers
                     result.Status = false;
                     result.StatusMessage = "Đăng ký thất bại";
                 }
-
-
             }
             else
             {
@@ -184,7 +178,7 @@ namespace CleanArch.Api.Controllers
             var account = await accountRepository.GetByIdAsync(claimValue);
 
             result.Status = true;
-            result.Data = new 
+            result.Data = new
             {
                 vnd = account.vnd,
                 role = account.role,

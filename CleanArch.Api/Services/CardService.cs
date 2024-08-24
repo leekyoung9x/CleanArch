@@ -1,8 +1,7 @@
-using CleanArch.Core.Entities.ResponseModel;
 using CleanArch.Core.Entities.RequestModel;
-using System.Text;
-using System.Text.Json;
+using CleanArch.Core.Entities.ResponseModel;
 using CleanArch.Core.Utils;
+using System.Text.Json;
 
 namespace CleanArch.Api.Services
 {
@@ -30,7 +29,7 @@ namespace CleanArch.Api.Services
             chargingRequest.Sign = HashHelper.ComputeMd5Hash(partnerKey + chargingRequest.Code + chargingRequest.Serial);
 
             // Tạo nội dung yêu cầu
-            var content = new FormUrlEncodedContent(new []
+            var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("telco", chargingRequest.Telco),
                 new KeyValuePair<string, string>("code", chargingRequest.Code),

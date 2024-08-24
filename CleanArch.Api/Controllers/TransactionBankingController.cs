@@ -1,16 +1,12 @@
-﻿using CleanArch.Api.Models;
-using CleanArch.Api.Services;
+﻿using CleanArch.Api.Services;
 using CleanArch.Application.Interfaces;
 using CleanArch.Core.Entities;
 using CleanArch.Core.Entities.RequestModel;
 using CleanArch.Core.Entities.ResponseModel;
 using CleanArch.Core.Utils;
-using CleanArch.Infrastructure.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace CleanArch.Api.Controllers
 {
@@ -66,9 +62,9 @@ namespace CleanArch.Api.Controllers
                     return result;
                 }
 
-                var trans = await _unitOfWork.TransactionBanking.GetTransactionByCustom(id, model.amount, model.otp);
+                var trans = await _unitOfWork.TransactionBanking.GetTransactionByCustom(playerId, model.amount, model.otp);
 
-                if (trans == null) 
+                if (trans == null)
                 {
                     result.Status = false;
                     result.StatusMessage = "Giao dịch không tồn tại";
@@ -190,7 +186,8 @@ namespace CleanArch.Api.Controllers
 
                 var tranService = await _unitOfWork.TransactionBanking.AddAsync(transactionBanking);
 
-                if (tranService) {
+                if (tranService)
+                {
                     result.Status = true;
                     result.StatusMessage = "Tạo giao dịch thành công";
                     result.Data = transactionBanking.description;
