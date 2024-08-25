@@ -113,5 +113,37 @@ namespace CleanArch.Infrastructure.Repository
                 return result;
             }
         }
+
+        public async Task<int> GetAccountIdByPlayerId(int id)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                string tableName = GetTableName();
+                string keyColumn = GetKeyColumnName();
+                string query = $"SELECT a.id FROM {tableName} a INNER JOIN player b ON a.id = b.account_id WHERE b.id = @id";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    id = id,
+                });
+
+                return result;
+            }
+        }
+
+        public async Task<int> GetPlayerAccumulateByPlayerId(int id)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                string query = $"SELECT\r\n  SUM(CASE WHEN a.status IN (1,2) THEN amount ELSE 0 END) AS accumulate\r\nFROM (SELECT\r\n    player_id,\r\n    amount,\r\n    status,\r\n    'Banking' AS `type`\r\n  FROM transaction_banking\r\n  WHERE player_id = @id\r\n  UNION ALL\r\n  SELECT\r\n    player_id,\r\n    amount,\r\n    status,\r\n    'Card' AS `type`\r\n  FROM transaction_card\r\n  WHERE player_id = @id) a";
+
+                var result = await connection.QueryFirstOrDefaultAsync<int>(query, new
+                {
+                    id = id,
+                });
+
+                return result;
+            }
+        }
     }
 }

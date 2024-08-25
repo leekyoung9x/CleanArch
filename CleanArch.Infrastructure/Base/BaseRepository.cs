@@ -39,6 +39,42 @@ namespace CleanArch.Infrastructure.Base
             }
         }
 
+        public async Task<bool> AddAsync(T entity, IDbConnection connection, IDbTransaction transaction)
+        {
+            // Kiểm tra kết nối không phải null
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection), "IDbConnection cannot be null.");
+            }
+
+            // Kiểm tra kết nối không phải null
+            if (transaction == null)
+            {
+                throw new ArgumentNullException(nameof(transaction), "IDbTransaction cannot be null.");
+            }
+
+            int rowsEffected = 0;
+            try
+            {
+                string tableName = GetTableName();
+                string columns = GetColumns(excludeKey: true);
+                string properties = GetPropertyNames(excludeKey: true);
+                string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
+
+                // Thực hiện câu lệnh SQL sử dụng kết nối và giao dịch truyền vào
+                rowsEffected = await connection.ExecuteAsync(query, entity, transaction);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi, ví dụ: ghi log
+                // Console.WriteLine($"Error: {ex.Message}");
+                // Có thể throw lại hoặc xử lý tùy theo nhu cầu của bạn
+                throw;
+            }
+
+            return rowsEffected > 0;
+        }
+
         public async Task<bool> DeleteAsync(T entity)
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
@@ -109,6 +145,25 @@ namespace CleanArch.Infrastructure.Base
                     string query = $"SELECT * FROM {tableName} WHERE {keyColumn} = '{Id}'";
 
                     result = await connection.QuerySingleOrDefaultAsync<T>(query);
+                }
+                catch (Exception ex) { }
+
+                return result;
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetByIdAsync(string column, object Id)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                IEnumerable<T> result = null;
+                try
+                {
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string query = $"SELECT * FROM {tableName} WHERE {column} = '{Id}'";
+
+                    result = await connection.QueryAsync<T>(query);
                 }
                 catch (Exception ex) { }
 

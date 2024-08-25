@@ -12,6 +12,7 @@ namespace CleanArch.Infrastructure
             services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IRankRepository, RankRepository>();
             services.AddTransient<ITransactionBanking, TransactionBanking>();
+            services.AddTransient<ITransactionCardRepository, TransactionCardRepository>();
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }

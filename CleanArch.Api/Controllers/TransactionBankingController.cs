@@ -230,5 +230,30 @@ namespace CleanArch.Api.Controllers
             // Handle form submission
             return result;
         }
+
+        [HttpGet("accumulate")]
+        public async Task<ServiceResult> GetAccumulate()
+        {
+            ServiceResult result = new ServiceResult();
+
+            int id = GetAccountId();
+            int playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(id);
+
+            if (playerId == 0)
+            {
+                result.Status = false;
+                result.StatusMessage = "Bạn chưa tạo nhân vật";
+                return result;
+            }
+
+            var trans = await _unitOfWork.Accounts.GetPlayerAccumulateByPlayerId(playerId);
+
+            result.Status = true;
+            result.StatusMessage = "";
+            result.Data = trans;
+
+            // Handle form submission
+            return result;
+        }
     }
 }

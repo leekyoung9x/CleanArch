@@ -31,7 +31,8 @@ namespace CleanArch.Test.IntegrationTests
             var accountRepository = new AccountRepository(_configuration);
             var rankRepository = new RankRepository(_configuration);
             var transactionRepository = new TransactionBanking(_configuration);
-            var unitofWork = new UnitOfWork(accountRepository, rankRepository, transactionRepository);
+            var transactionCardRepository = new TransactionCardRepository(_configuration);
+            var unitofWork = new UnitOfWork(accountRepository, rankRepository, transactionRepository, transactionCardRepository);
             _moqRepo = new Mock<IUnitOfWork>();
         }
 

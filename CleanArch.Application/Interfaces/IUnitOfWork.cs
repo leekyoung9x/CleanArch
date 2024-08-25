@@ -5,5 +5,6 @@
         IAccountRepository Accounts { get; }
         IRankRepository Ranks { get; }
         ITransactionBanking TransactionBanking { get; }
+        ITransactionCardRepository TransactionCard { get; }
     }
 }

@@ -8,7 +8,11 @@ namespace CleanArch.Application.Interfaces
 
         Task<T?> GetByIdAsync(long id);
 
+        Task<IEnumerable<T>> GetByIdAsync(string column, object Id);
+
         Task<bool> AddAsync(T entity);
+
+        Task<bool> AddAsync(T entity, IDbConnection connection, IDbTransaction transaction);
 
         Task<bool> UpdateAsync(T entity);
 

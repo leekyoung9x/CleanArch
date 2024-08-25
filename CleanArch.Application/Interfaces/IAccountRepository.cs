@@ -13,5 +13,8 @@ namespace CleanArch.Application.Interfaces
         Task<bool> ChangePassword(int id, string passwordNew);
 
         Task<int> GetPlayerIdByAccountId(int id);
+
+        Task<int> GetPlayerAccumulateByPlayerId(int id);
+        Task<int> GetAccountIdByPlayerId(int id);
     }
 }

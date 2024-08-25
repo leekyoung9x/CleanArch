@@ -17,7 +17,7 @@ namespace CleanArch.Core.Entities.ResponseModel
         public int? Value { get; set; }
 
         [JsonPropertyName("declared_value")]
-        public string DeclaredValue { get; set; }
+        public object? DeclaredValue { get; set; }
 
         [JsonPropertyName("telco")]
         public string Telco { get; set; }
