@@ -1,18 +1,33 @@
 ﻿using CleanArch.Api.DependencyInjection;
 using CleanArch.Api.Filter;
 using CleanArch.Infrastructure;
-using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Nest;
+using NLog;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-//Configure Log4net.
-XmlConfigurator.Configure(new FileInfo("log4net.config"));
+// Cấu hình NLog
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+builder.Host.UseNLog(); // Sử dụng NLog để ghi log
+
+// Cấu hình Elasticsearch
+builder.Services.AddSingleton<IElasticClient>(provider =>
+{
+    var settings = new ConnectionSettings(new Uri("http://157.245.153.39:9200"))
+        // .BasicAuthentication("elastic", "12345678@Abc")
+        .DefaultIndex("transaction")
+        .DisableDirectStreaming();
+
+    return new ElasticClient(settings);
+});
 
 //Injecting services.
 builder.Services.RegisterServices();
@@ -82,6 +97,8 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.AddLogging();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {

@@ -36,6 +36,15 @@ namespace CleanArch.Api.Controllers
             if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
             {
                 int id = GetAccountId();
+                int playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(id);
+
+                if (playerId == 0)
+                {
+                    result.Status = false;
+                    result.StatusMessage = "Bạn chưa tạo nhân vật";
+                    return result;
+                }
+                
                 var cardService = _serviceProvider.GetRequiredService<ICardService>();
                 var data = await cardService.ChargingWS(chargingRequest, _unitOfWork, id);
 
@@ -81,6 +90,20 @@ namespace CleanArch.Api.Controllers
         public async Task<ServiceResult> Callback([FromBody] CallbackRequest model)
         {
             ServiceResult result = new ServiceResult();
+
+            try
+            {
+                var elasticService = _serviceProvider.GetRequiredService<IElasticsearchService>();
+
+                var elk = await elasticService.InsertDataELK<CallbackRequest>(new List<CallbackRequest>() {model});
+
+                result.Data = elk.DebugInformation;
+
+            }
+            catch (Exception e)
+            {
+                result.Data = e;
+            }
 
             var cardService = _serviceProvider.GetRequiredService<ICardService>();
             await cardService.HandleCallback(model, _unitOfWork);

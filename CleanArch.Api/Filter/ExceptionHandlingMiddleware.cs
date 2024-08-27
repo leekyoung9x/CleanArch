@@ -7,6 +7,7 @@ namespace CleanArch.Api.Filter
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public ExceptionHandlingMiddleware(RequestDelegate next)
         {
@@ -22,6 +23,12 @@ namespace CleanArch.Api.Filter
             }
             catch (Exception ex)
             {
+                // Tạo logger động dựa trên loại của class nơi xảy ra lỗi
+                // ILog logger = LogManager.GetLogger(ex.TargetSite.DeclaringType);
+                // logger.Error("An unhandled exception occurred.", ex);
+                 // Ghi log lỗi
+                Logger.Error(ex, ex.Message);
+
                 // Xử lý exception và trả về phản hồi cho client
                 await HandleExceptionAsync(context, ex);
             }
