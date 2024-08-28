@@ -15,14 +15,13 @@ var configuration = builder.Configuration;
 
 // Cấu hình NLog
 builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
 builder.Host.UseNLog(); // Sử dụng NLog để ghi log
 
 // Cấu hình Elasticsearch
 builder.Services.AddSingleton<IElasticClient>(provider =>
 {
     var settings = new ConnectionSettings(new Uri("http://157.245.153.39:9200"))
-        // .BasicAuthentication("elastic", "12345678@Abc")
+        .BasicAuthentication("elastic", "12345678@Abc")
         .DefaultIndex("transaction")
         .DisableDirectStreaming();
 
