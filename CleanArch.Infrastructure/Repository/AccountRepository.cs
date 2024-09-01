@@ -62,17 +62,22 @@ namespace CleanArch.Infrastructure.Repository
 
         public async Task<bool> Register(string username, string password, string ip)
         {
+            int vnd = 0;
+
+            int.TryParse(configuration["NroConfig:VndRegister"], out vnd);
+
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string query = $"INSERT INTO {tableName}(`username`, `password`, `ip_address`) VALUES (@username, @password, @ip)";
+                string query = $"INSERT INTO {tableName}(`username`, `password`, `ip_address`, `vnd`) VALUES (@username, @password, @ip, @vnd)";
 
                 var result = await connection.ExecuteAsync(query, new
                 {
                     username = username,
                     password = password,
                     ip = ip,
+                    vnd = vnd,
                 });
 
                 return result > 0;
