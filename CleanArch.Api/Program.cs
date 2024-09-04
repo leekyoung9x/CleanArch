@@ -1,5 +1,6 @@
 ﻿using CleanArch.Api.DependencyInjection;
 using CleanArch.Api.Filter;
+using CleanArch.Core.Entities;
 using CleanArch.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +18,16 @@ var configuration = builder.Configuration;
 builder.Logging.ClearProviders();
 builder.Host.UseNLog(); // Sử dụng NLog để ghi log
 
+// Bind Elasticsearch configuration
+var elasticsearchOptions = new ElasticsearchOptions();
+builder.Configuration.GetSection("Elasticsearch").Bind(elasticsearchOptions);
+
 // Cấu hình Elasticsearch
 builder.Services.AddSingleton<IElasticClient>(provider =>
 {
-    var settings = new ConnectionSettings(new Uri("http://157.245.153.39:9200"))
-        .BasicAuthentication("elastic", "12345678@Abc")
-        .DefaultIndex("transaction")
+    var settings = new ConnectionSettings(new Uri(elasticsearchOptions.Uri))
+        .BasicAuthentication(elasticsearchOptions.Username, elasticsearchOptions.Password)
+        .DefaultIndex(elasticsearchOptions.DefaultIndex)
         .DisableDirectStreaming();
 
     return new ElasticClient(settings);

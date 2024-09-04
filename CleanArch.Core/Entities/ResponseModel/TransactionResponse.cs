@@ -5,10 +5,10 @@ namespace CleanArch.Core.Entities.ResponseModel
     public class Transaction
     {
         [JsonPropertyName("transactionID")]
-        public int TransactionID { get; set; }
+        public string TransactionID { get; set; }
 
         [JsonPropertyName("amount")]
-        public int Amount { get; set; }
+        public string Amount { get; set; }
 
         [JsonPropertyName("description")]
         public string Description { get; set; }

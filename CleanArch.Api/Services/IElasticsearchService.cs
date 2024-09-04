@@ -10,6 +10,8 @@ namespace CleanArch.Api.Services
         Task<DeleteResponse> DeleteDocumentAsync<T>(string id) where T : class;
         Task<T> GetDocumentByIdAsync<T>(string id) where T : class;
         Task<BulkResponse> InsertDataELK<T>(List<T> listData) where T : class;
+        Task<BulkResponse> InsertDataELK<T>(List<T> listData, string index) where T : class;
+        Task BulkUpsertDocuments<T>(IEnumerable<T> documents, Func<T, string> idSelector, string indexName = "transaction") where T : class;
     }
 }
 
