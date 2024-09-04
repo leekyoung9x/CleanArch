@@ -42,6 +42,31 @@ namespace CleanArch.Api.Controllers
             return apiResponse;
         }
 
+        [HttpGet("Vnd")]
+        public async Task<ApiResponse<List<rank>>> GetVnd()
+        {
+            var apiResponse = new ApiResponse<List<rank>>();
+
+            try
+            {
+                var data = await _unitOfWork.Ranks.GetVndRank();
+                apiResponse.Success = true;
+                apiResponse.Result = data;
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
         [HttpGet("PetPower")]
         public async Task<ApiResponse<List<rank>>> GetPetPower()
         {
