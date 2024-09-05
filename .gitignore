@@ -18,6 +18,8 @@
 /CleanArch.Sql/obj
 /CleanArch.Test/bin/
 /CleanArch.Test/obj
+/CleanArch.WebSocket/bin/
+/CleanArch.WebSocket/obj
 /HSO/obj
 /HSO/
 /.vs/ProjectEvaluation/*.bin
