@@ -8,6 +8,7 @@ using System.Text;
 using Nest;
 using NLog;
 using NLog.Web;
+using CleanArch.Core.Entities.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.AddSingleton<IElasticClient>(provider =>
 //Injecting services.
 builder.Services.RegisterServices();
 builder.Services.RegisterServicesAPI();
+builder.Services.RegisterMapper();
 
 // Add services to the container.
 builder.Services.AddControllers();

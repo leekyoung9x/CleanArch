@@ -3,9 +3,11 @@ using CleanArch.Application.Interfaces;
 using CleanArch.Core.Entities.Constant;
 using CleanArch.Core.Entities.Enumeration;
 using CleanArch.Core.Entities.RequestModel;
+using CleanArch.Core.Entities.ElasticModel;
 using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace CleanArch.Api.Controllers
 {
@@ -93,9 +95,11 @@ namespace CleanArch.Api.Controllers
 
             try
             {
+                 // Lấy IMapper từ ServiceProvider
+                var mapper = _serviceProvider.GetRequiredService<IMapper>();
                 var elasticService = _serviceProvider.GetRequiredService<IElasticsearchService>();
-
-                var elk = await elasticService.InsertDataELK<CallbackRequest>(new List<CallbackRequest>() {model});
+                var elkDto = mapper.Map<CallbackELKModel>(model);
+                var elk = await elasticService.InsertDataELK<CallbackELKModel>(new List<CallbackELKModel>() {elkDto});
 
                 result.Data = elk.DebugInformation;
 
