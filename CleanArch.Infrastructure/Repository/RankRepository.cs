@@ -37,6 +37,35 @@ namespace CleanArch.Infrastructure.Repository
                 return result;
             }
         }
+        
+        public async Task<List<rank>> GetVndRank()
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                List<rank> result = new List<rank>();
+                try
+                {
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string query = @"SELECT i.name, j.vnd as value FROM player i INNER JOIN (
+                                    SELECT a.player_id, SUM(a.amount) AS vnd FROM (
+                                    SELECT player_id, amount FROM transaction_banking
+                                    WHERE is_recieve = 1
+                                    UNION ALL
+                                    SELECT player_id, amount_real FROM transaction_card
+                                    WHERE status IN (1, 2)) a
+                                    GROUP BY a.player_id
+                                    ORDER BY vnd DESC
+                                    LIMIT 0, 10) j ON i.id = j.player_id
+                                    ORDER BY j.vnd DESC;";
+
+                    result = (await connection.QueryAsync<rank>(query)).ToList();
+                }
+                catch (Exception ex) { }
+
+                return result;
+            }
+        }
 
         public async Task<List<rank>> GetPetPowerRank()
         {

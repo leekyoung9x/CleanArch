@@ -1,3 +1,4 @@
+using CleanArch.Core.Entities.RequestModel;
 using CleanArch.Core.Entities.ResponseModel;
 using System.Text.Json;
 
@@ -7,11 +8,13 @@ namespace CleanArch.Api.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _serviceProvider;
 
-        public BankService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public BankService(IHttpClientFactory httpClientFactory, IConfiguration configuration, IServiceProvider serviceProvider)
         {
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<TransactionResponse> GetHistoryTransfer()
@@ -33,6 +36,16 @@ namespace CleanArch.Api.Services
 
                 // Deserialize JSON thành ReCaptchaResponse
                 result = JsonSerializer.Deserialize<TransactionResponse>(jsonString);
+
+                try
+                {
+                    var elasticService = _serviceProvider.GetRequiredService<IElasticsearchService>();
+
+                    await elasticService.BulkUpsertDocuments<Transaction>(result.Transactions, doc => doc.TransactionID, "transaction_banking");
+                }
+                catch (Exception)
+                {
+                }
             }
             catch (Exception)
             {
