@@ -31,23 +31,23 @@ builder.Services.AddSwaggerGen();
 var configuration = builder.Configuration;
 
 // Add services to the container
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ClockSkew = TimeSpan.Zero,
-            ValidIssuer = configuration["Jwt:Issuer"],
-            ValidAudience = configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
-        };
-    });
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateLifetime = true,
+//             ValidateIssuerSigningKey = true,
+//             ClockSkew = TimeSpan.Zero,
+//             ValidIssuer = configuration["Jwt:Issuer"],
+//             ValidAudience = configuration["Jwt:Audience"],
+//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+//         };
+//     });
 
-builder.Services.AddAuthorization();
+// builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -59,15 +59,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 // Cấu hình WebSocket
 app.UseWebSockets();
 
+// Khởi chạy ConsoleJob trong background để đọc dữ liệu từ console
+var consoleJob = new ConsoleJob();
+Task.Run(() => consoleJob.StartAsync());
+
 app.MapGet("/ws", async context =>
 {
-     // Kiểm tra header để xác nhận yêu cầu là WebSocket
+    // Kiểm tra header để xác nhận yêu cầu là WebSocket
     if (context.Request.Headers["Upgrade"].ToString().ToLower() != "websocket" || 
         context.Request.Headers["Connection"].ToString().ToLower() != "upgrade")
     {
@@ -75,11 +79,19 @@ app.MapGet("/ws", async context =>
         return;
     }
 
+    // Lấy token từ query parameters
+    var token = context.Request.Query["token"].ToString();
+    
+    if (string.IsNullOrEmpty(token))
+    {
+        context.Response.StatusCode = 401; // Unauthorized
+        return;
+    }
+
     // Xác thực JWT và lấy client ID
-    var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
     var handler = new JwtSecurityTokenHandler();
     var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-    var clientId = jsonToken?.Claims.First(claim => claim.Type == "id").Value;
+    var clientId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "id")?.Value;
 
     if (string.IsNullOrEmpty(clientId))
     {
@@ -87,6 +99,7 @@ app.MapGet("/ws", async context =>
         return;
     }
 
+    // Thiết lập kết nối WebSocket
     var webSocket = await context.WebSockets.AcceptWebSocketAsync();
     await WebSocketHandler.HandleWebSocket(webSocket, clientId);
 });
