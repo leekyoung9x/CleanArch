@@ -120,43 +120,54 @@ namespace CleanArch.Api.Controllers
         {
             ServiceResult result = new ServiceResult();
 
-            var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
+            bool register = false;
 
-            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            bool.TryParse(_configuration["NroConfig:OpenRegister"], out register);
+
+            if (register)
             {
-                var authService = _serviceProvider.GetRequiredService<IAuthService>();
-                var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
+                var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-                var isExist = await accountRepository.IsExist(model.username);
-
-                if (isExist)
+                var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
+                if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
                 {
-                    result.Status = false;
-                    result.StatusMessage = "Tài khoản đã tồn tại";
-                    return result;
-                }
+                    var authService = _serviceProvider.GetRequiredService<IAuthService>();
+                    var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
 
-                // Lấy địa chỉ IP của máy gửi request
-                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    var isExist = await accountRepository.IsExist(model.username);
 
-                var isSucess = await accountRepository.Register(model.username, model.password, ipAddress);
+                    if (isExist)
+                    {
+                        result.Status = false;
+                        result.StatusMessage = "Tài khoản đã tồn tại";
+                        return result;
+                    }
 
-                if (isSucess)
-                {
-                    result.Status = true;
-                    result.StatusMessage = "Đăng ký thành công";
+                    // Lấy địa chỉ IP của máy gửi request
+                    var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+                    var isSucess = await accountRepository.Register(model.username, model.password, ipAddress);
+
+                    if (isSucess)
+                    {
+                        result.Status = true;
+                        result.StatusMessage = "Đăng ký thành công";
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.StatusMessage = "Đăng ký thất bại";
+                    }
                 }
                 else
                 {
                     result.Status = false;
-                    result.StatusMessage = "Đăng ký thất bại";
+                    result.StatusMessage = "Captcha không hợp lệ";
                 }
-            }
-            else
+            } else
             {
                 result.Status = false;
-                result.StatusMessage = "Captcha không hợp lệ";
+                result.StatusMessage = "Chức năng tạm khóa";
             }
 
             // Handle form submission

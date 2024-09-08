@@ -82,7 +82,7 @@ app.MapGet("/ws", async context =>
     // Lấy token từ query parameters
     var token = context.Request.Query["token"].ToString();
     
-    if (string.IsNullOrEmpty(token))
+    if (string.IsNullOrEmpty(token) || token == "null")
     {
         context.Response.StatusCode = 401; // Unauthorized
         return;
