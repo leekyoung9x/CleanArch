@@ -106,10 +106,23 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddLogging();
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(5000); // Lắng nghe trên tất cả IP tại cổng 5000
-});
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    serverOptions.ListenAnyIP(5000, listenOptions =>
+//    {
+//        // Tìm đường dẫn tuyệt đối đến chứng chỉ .pfx trong thư mục wwwroot/ssl
+//        var pfxPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ssl", "nrohat.pfx");
+//        var pfxPassword = "Sang321#@!"; // Thay thế bằng mật khẩu của chứng chỉ .pfx
+
+//        // Cấu hình HTTPS
+//        listenOptions.UseHttps(pfxPath, pfxPassword);
+//    }); // Lắng nghe trên tất cả IP tại cổng 5000
+//});
+
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    serverOptions.ListenAnyIP(5000); // Lắng nghe trên tất cả IP tại cổng 5000
+//});
 
 var app = builder.Build();
 
@@ -122,11 +135,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
