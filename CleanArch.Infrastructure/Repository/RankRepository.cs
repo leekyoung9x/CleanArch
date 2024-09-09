@@ -90,5 +90,29 @@ namespace CleanArch.Infrastructure.Repository
                 return result;
             }
         }
+        
+        public async Task<List<rank>> GetEvent()
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                List<rank> result = new List<rank>();
+                try
+                {
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string query = @"SELECT
+                                        name,
+                                        CAST(REPLACE(SUBSTRING_INDEX (SUBSTRING_INDEX (data_point, ',', 1), '[', -1), ']', '') AS SIGNED) AS z_m
+                                    FROM player
+                                    ORDER BY z_m DESC
+                                    LIMIT 10";
+
+                    result = (await connection.QueryAsync<rank>(query)).ToList();
+                }
+                catch (Exception ex) { }
+
+                return result;
+            }
+        }
     }
 }

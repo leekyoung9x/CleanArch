@@ -91,5 +91,30 @@ namespace CleanArch.Api.Controllers
 
             return apiResponse;
         }
+
+        [HttpGet("Event")]
+        public async Task<ApiResponse<List<rank>>> GetEvent()
+        {
+            var apiResponse = new ApiResponse<List<rank>>();
+
+            try
+            {
+                var data = await _unitOfWork.Ranks.GetEvent();
+                apiResponse.Success = true;
+                apiResponse.Result = data;
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
     }
 }

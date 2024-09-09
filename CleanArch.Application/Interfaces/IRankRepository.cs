@@ -7,6 +7,7 @@ namespace CleanArch.Application.Interfaces
         Task<List<rank>> GetPowerRank();
 
         Task<List<rank>> GetPetPowerRank();
+        Task<List<rank>> GetEvent();
 
         Task<List<rank>> GetVndRank();
     }
