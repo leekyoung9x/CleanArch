@@ -41,7 +41,7 @@ namespace CleanArch.Api.Services
                 {
                     var elasticService = _serviceProvider.GetRequiredService<IElasticsearchService>();
 
-                    await elasticService.BulkUpsertDocuments<Transaction>(result.Transactions, doc => doc.TransactionID, "transaction_banking");
+                    elasticService.BulkUpsertDocuments<Transaction>(result.Transactions, doc => doc.TransactionID, "transaction_banking");
                 }
                 catch (Exception)
                 {
