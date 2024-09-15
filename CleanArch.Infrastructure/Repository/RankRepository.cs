@@ -102,9 +102,9 @@ namespace CleanArch.Infrastructure.Repository
                     string keyColumn = GetKeyColumnName();
                     string query = @"SELECT
                                         name,
-                                        CAST(REPLACE(SUBSTRING_INDEX (SUBSTRING_INDEX (data_point, ',', 1), '[', -1), ']', '') AS SIGNED) AS z_m
+                                        CAST(REPLACE(SUBSTRING_INDEX (SUBSTRING_INDEX (data_point, ',', 1), '[', -1), ']', '') AS SIGNED) AS `value`
                                     FROM player
-                                    ORDER BY z_m DESC
+                                    ORDER BY `value` DESC
                                     LIMIT 10";
 
                     result = (await connection.QueryAsync<rank>(query)).ToList();

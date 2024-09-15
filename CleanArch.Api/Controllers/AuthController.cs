@@ -26,10 +26,10 @@ namespace CleanArch.Api.Controllers
         {
             ServiceResult result = new ServiceResult();
 
-            var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
+            var reCaptchaService = _serviceProvider.GetRequiredService<ICaptchaService>();
 
             var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            if (recaptchaResponse)
             {
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
                 var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
@@ -63,10 +63,10 @@ namespace CleanArch.Api.Controllers
         {
             ServiceResult result = new ServiceResult();
 
-            var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
+            var reCaptchaService = _serviceProvider.GetRequiredService<ICaptchaService>();
 
             var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            if (recaptchaResponse)
             {
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
                 var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
