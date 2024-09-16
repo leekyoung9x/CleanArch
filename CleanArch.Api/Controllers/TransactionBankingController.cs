@@ -86,7 +86,7 @@ namespace CleanArch.Api.Controllers
 
                 foreach (var item in lstConfirm.Transactions)
                 {
-                    if ((item.Type == "IN" && item.Amount == trans.amount.ToString() && !string.IsNullOrEmpty(trans.description) && item.Description.Contains(trans.description)) || playerId == 1)
+                    if ((item.Type == "IN" && item.Amount == trans.amount.ToString() && !string.IsNullOrEmpty(trans.description) && item.Description.ToLower().Contains(trans.description.ToLower())) || playerId == 1)
                     {
                         trans.status = true;
                         trans.is_recieve = true;
