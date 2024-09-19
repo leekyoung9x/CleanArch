@@ -7,6 +7,7 @@ using CleanArch.Core.Utils;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace CleanArch.Api.Controllers
 {
@@ -86,7 +87,7 @@ namespace CleanArch.Api.Controllers
 
                 foreach (var item in lstConfirm.Transactions)
                 {
-                    if ((item.Type == "IN" && item.Amount == trans.amount.ToString() && !string.IsNullOrEmpty(trans.description) && item.Description.ToLower().Contains(trans.description.ToLower())) || playerId == 1)
+                    if ((item.Type == "IN" && item.Amount == trans.amount.ToString() && !string.IsNullOrEmpty(trans.description) && Regex.Replace(item.Description.ToLower(), @"\s+", "").Contains(trans.description.ToLower())) || playerId == 1)
                     {
                         trans.status = true;
                         trans.is_recieve = true;

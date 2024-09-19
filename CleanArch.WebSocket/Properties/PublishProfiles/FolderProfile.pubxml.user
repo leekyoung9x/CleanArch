@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\New folder\CleanArch\CleanArch.WebSocket\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2024-09-07T12:18:13.3256321Z||;</History>
+    <History>True|2024-09-19T17:00:07.8076085Z||;True|2024-09-07T19:18:13.3256321+07:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
