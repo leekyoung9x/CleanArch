@@ -98,6 +98,14 @@ namespace CleanArch.Api.Controllers
                         {
                             account.vnd += (int)(trans.amount * 110 / 100);
 
+                            bool haveEventPoint = false;
+                            haveEventPoint = bool.TryParse(_configuration["Event:HaveEvent"], out haveEventPoint);
+
+                            if (haveEventPoint)
+                            {
+                                account.pointNap += (int)trans.amount / 10000;
+                            }
+
                             using (IDbConnection connection = new MySqlConnection(_configuration.GetConnectionString("DBConnection")))
                             {
                                 connection.Open();

@@ -154,6 +154,14 @@ namespace CleanArch.Api.Services
                     if (accountDb != null)
                     {
                         accountDb.vnd += tran.amount_real;
+
+                        bool haveEventPoint = false;
+                        haveEventPoint = bool.TryParse(_configuration["Event:HaveEvent"], out haveEventPoint);
+
+                        if (haveEventPoint)
+                        {
+                            accountDb.pointNap += (int)tran.amount_real / 10000;
+                        }
                     }
                 }
 
@@ -211,6 +219,14 @@ namespace CleanArch.Api.Services
                     if (accountDb != null)
                     {
                         accountDb.vnd += transactionCard.amount_real;
+
+                        bool haveEventPoint = false;
+                        haveEventPoint = bool.TryParse(_configuration["Event:HaveEvent"], out haveEventPoint);
+
+                        if (haveEventPoint)
+                        {
+                            accountDb.pointNap += (int)transactionCard.amount_real / 10000;
+                        }
                     }
                 }
 
@@ -280,6 +296,14 @@ namespace CleanArch.Api.Services
                     if (accountDb != null)
                     {
                         accountDb.vnd += itemDb.amount_real;
+
+                        bool haveEventPoint = false;
+                        haveEventPoint = bool.TryParse(_configuration["Event:HaveEvent"], out haveEventPoint);
+
+                        if (haveEventPoint)
+                        {
+                            accountDb.pointNap += (int)itemDb.amount_real / 10000;
+                        }
                     }
                 }
 
