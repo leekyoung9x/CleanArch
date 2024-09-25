@@ -20,21 +20,10 @@ namespace CleanArch.Api.Services
         {
 
             var baseURL = _configuration["Admin:BaseURL"];
+            var key = _configuration["Admin:Key"];
             var httpClient = _httpClientFactory.CreateClient();
 
-            // Thiết lập tiêu đề nếu cần
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            List<send_item> items = new List<send_item>();
-            GetRewardItem(money, playerId, items);
-
-            // Chuyển đối tượng thành JSON
-            string jsonData = JsonConvert.SerializeObject(items);
-
-            // Tạo nội dung HTTP với dữ liệu JSON
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync($"{baseURL}/chargingws/v2", content);
+            var response = await httpClient.GetAsync($"{baseURL}/api/Client/Reward?id={playerId}&keySecurrity={key}&amount={money}");
             var jsonString = await response.Content.ReadAsStringAsync();
 
             return true;

@@ -16,5 +16,7 @@ namespace CleanArch.Application.Interfaces
 
         Task<int> GetPlayerAccumulateByPlayerId(int id);
         Task<int> GetAccountIdByPlayerId(int id);
+
+        Task<int> GetPlayerAccumulateHaveDoneByPlayerId(int id, int amount);
     }
 }

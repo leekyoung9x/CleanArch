@@ -1,10 +1,10 @@
 ﻿using CleanArch.Api.Models;
+using CleanArch.Api.Services;
 using CleanArch.Application.Interfaces;
 using CleanArch.Core.Entities;
 using CleanArch.Core.Entities.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CleanArch.Api.Controllers
 {
@@ -13,10 +13,12 @@ namespace CleanArch.Api.Controllers
     public class RankController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IServiceProvider _serviceProvider;
 
-        public RankController(IUnitOfWork unitOfWork)
+        public RankController(IUnitOfWork unitOfWork, IServiceProvider serviceProvider)
         {
             _unitOfWork = unitOfWork;
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet("Power")]
@@ -119,8 +121,8 @@ namespace CleanArch.Api.Controllers
             return apiResponse;
         }
 
-        [HttpPost("Reward")]
-        public async Task<ServiceResult> SendReward(int money)
+        [HttpGet("Reward")]
+        public async Task<ServiceResult> SendReward([FromQuery] int amount)
         {
             ServiceResult result = new ServiceResult();
 
@@ -139,7 +141,28 @@ namespace CleanArch.Api.Controllers
                     return result;
                 }
 
-                var data = await _unitOfWork.Ranks.GetEvent();
+                var accum = await _unitOfWork.Accounts.GetPlayerAccumulateByPlayerId(playerId);
+
+                if (accum < amount)
+                {
+                    result.Status = false;
+                    result.StatusMessage = "Bạn chưa nạp đủ mốc " + amount;
+                    return result;
+                }
+
+                var haveDone = await _unitOfWork.Accounts.GetPlayerAccumulateHaveDoneByPlayerId(playerId, amount);
+
+                if (haveDone > 0)
+                {
+                    result.Status = false;
+                    result.StatusMessage = "Bạn đã nhận quà mốc " + amount;
+                    return result;
+                }
+
+                var rankService = _serviceProvider.GetRequiredService<IRankService>();
+
+                var data = await rankService.GetReward(amount, playerId);
+                result.StatusMessage = "Đang xử lý hộp quà của bạn";
                 result.Status = true;
                 result.Data = data;
             }

@@ -11,6 +11,7 @@ namespace CleanArch.Api.DependencyInjection
             services.AddScoped<IReCaptchaService, ReCaptchaService>();
             services.AddScoped<IBankService, BankService>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<IRankService, RankService>();
             // Đăng ký dịch vụ ElasticsearchService
             services.AddScoped<IElasticsearchService, ElasticsearchService>();
             services.AddControllers();

@@ -1,5 +1,5 @@
-using System.Net.WebSockets;
 using System.Collections.Concurrent;
+using System.Net.WebSockets;
 using System.Text;
 
 public static class WebSocketManager
@@ -35,6 +35,19 @@ public static class WebSocketManager
             if (client.State == WebSocketState.Open)
             {
                 await client.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+    }
+
+    // Gửi tin nhắn đến tất cả client
+    public static async Task SendMessageToClient(string id, string message)
+    {
+        var buffer = Encoding.UTF8.GetBytes(message);
+        foreach (var client in _clients)
+        {
+            if (client.Key == id && client.Value.State == WebSocketState.Open)
+            {
+                await client.Value.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
             }
         }
     }

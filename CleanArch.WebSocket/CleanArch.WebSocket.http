@@ -1,4 +1,4 @@
-@CleanArch.WebSocket_HostAddress = http://localhost:5098
+@CleanArch.WebSocket_HostAddress = http://localhost:6000
 
 GET {{CleanArch.WebSocket_HostAddress}}/weatherforecast/
 Accept: application/json

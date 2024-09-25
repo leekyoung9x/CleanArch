@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 public class ConsoleJob
 {
     public async Task StartAsync()
