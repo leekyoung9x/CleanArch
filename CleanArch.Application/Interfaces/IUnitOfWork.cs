@@ -6,5 +6,6 @@
         IRankRepository Ranks { get; }
         ITransactionBanking TransactionBanking { get; }
         ITransactionCardRepository TransactionCard { get; }
+        IPostRepository Post { get; }
     }
 }

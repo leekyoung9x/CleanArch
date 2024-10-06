@@ -47,16 +47,34 @@ namespace CleanArch.Infrastructure.Repository
                 {
                     string tableName = GetTableName();
                     string keyColumn = GetKeyColumnName();
-                    string query = @"SELECT i.name, j.vnd as value FROM player i INNER JOIN (
-                                    SELECT a.player_id, SUM(a.amount) AS vnd FROM (
-                                    SELECT player_id, amount FROM transaction_banking
-                                    WHERE is_recieve = 1
-                                    UNION ALL
-                                    SELECT player_id, amount_real FROM transaction_card
-                                    WHERE status IN (1, 2)) a
-                                    GROUP BY a.player_id
-                                    ORDER BY vnd DESC
-                                    LIMIT 0, 10) j ON i.id = j.player_id
+                    string query = @"SELECT
+                                      i.name,
+                                      j.vnd AS value
+                                    FROM player i
+                                      INNER JOIN (SELECT
+                                          a.player_id,
+                                          SUM(a.amount) AS vnd
+                                        FROM (SELECT
+                                            player_id,
+                                            amount
+                                          FROM transaction_banking
+                                          WHERE is_recieve = 1
+                                          AND YEAR(created_date) >= 2024
+                                          AND MONTH(created_date) >= 10
+                                          AND DAY(created_date) > 5
+                                          UNION ALL
+                                          SELECT
+                                            player_id,
+                                            amount_real
+                                          FROM transaction_card
+                                          WHERE status IN (1, 2)
+                                          AND YEAR(time) >= 2024
+                                          AND MONTH(time) >= 10
+                                          AND DAY(time) > 5) a
+                                        GROUP BY a.player_id
+                                        ORDER BY vnd DESC
+                                        LIMIT 0, 10) j
+                                        ON i.id = j.player_id
                                     ORDER BY j.vnd DESC;";
 
                     result = (await connection.QueryAsync<rank>(query)).ToList();
@@ -90,7 +108,7 @@ namespace CleanArch.Infrastructure.Repository
                 return result;
             }
         }
-        
+
         public async Task<List<rank>> GetEvent()
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
@@ -106,6 +124,27 @@ namespace CleanArch.Infrastructure.Repository
                                     FROM player
                                     ORDER BY z_m DESC
                                     LIMIT 10";
+
+                    result = (await connection.QueryAsync<rank>(query)).ToList();
+                }
+                catch (Exception ex) { }
+
+                return result;
+            }
+        }
+
+        public async Task<List<rank>> GetEventPoint()
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                List<rank> result = new List<rank>();
+                try
+                {
+                    string tableName = GetTableName();
+                    string keyColumn = GetKeyColumnName();
+                    string query = @"SELECT name, diem_skien FROM player
+                                            ORDER BY diem_skien DESC, name
+                                            LIMIT 0, 10;";
 
                     result = (await connection.QueryAsync<rank>(query)).ToList();
                 }
