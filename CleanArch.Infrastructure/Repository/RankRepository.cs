@@ -142,7 +142,7 @@ namespace CleanArch.Infrastructure.Repository
                 {
                     string tableName = GetTableName();
                     string keyColumn = GetKeyColumnName();
-                    string query = @"SELECT name, diem_skien FROM player
+                    string query = @"SELECT name, diem_skien as value FROM player
                                             ORDER BY diem_skien DESC, name
                                             LIMIT 0, 10;";
 

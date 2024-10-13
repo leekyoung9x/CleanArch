@@ -154,6 +154,11 @@ namespace CleanArch.Api.Controllers
         {
             ServiceResult result = new ServiceResult();
 
+            result.Status = false;
+            result.StatusMessage = "Chức năng khóa vĩnh viễn!";
+
+            return result;
+
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
             var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
