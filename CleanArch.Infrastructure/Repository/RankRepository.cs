@@ -61,7 +61,7 @@ namespace CleanArch.Infrastructure.Repository
                                           WHERE is_recieve = 1
                                           AND YEAR(created_date) >= 2024
                                           AND MONTH(created_date) >= 10
-                                          AND DAY(created_date) > 5
+                                          AND DAY(created_date) >= 25
                                           UNION ALL
                                           SELECT
                                             player_id,
@@ -70,7 +70,7 @@ namespace CleanArch.Infrastructure.Repository
                                           WHERE status IN (1, 2)
                                           AND YEAR(time) >= 2024
                                           AND MONTH(time) >= 10
-                                          AND DAY(time) > 5) a
+                                          AND DAY(time) >= 25) a
                                         GROUP BY a.player_id
                                         ORDER BY vnd DESC
                                         LIMIT 0, 10) j

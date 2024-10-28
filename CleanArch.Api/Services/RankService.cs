@@ -136,7 +136,6 @@ namespace CleanArch.Api.Services
                     }
                 case 10000000:
                     {
-
                         break;
                     }
                 default:
