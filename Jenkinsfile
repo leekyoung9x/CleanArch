@@ -1,13 +1,10 @@
 pipeline {
   agent any
-
- 
-  
   stages {
     stage('Set Build Display Name') {
       environment {
-        CURL_HOME = 'C:\\curl\\bin'  // Đường dẫn đến thư mục chứa curl
-        PATH = "${CURL_HOME};${env.PATH}"  // Thêm cURL vào PATH
+        CURL_HOME = 'C:\\curl\\bin'
+        PATH = "${CURL_HOME};${env.PATH}" 
       }
       parallel {
         stage('Set Build Display Name') {
