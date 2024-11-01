@@ -1,29 +1,23 @@
 pipeline {
   agent any
-
-  environment {
-    CURL_HOME = 'C:\\curl\\bin'
-    PATH = "${CURL_HOME};${env.PATH}"
-  }
-
-  parameters {
-    string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
-  }
-
   stages {
     stage('Set Build Display Name') {
-      steps {
-        script {
-          currentBuild.displayName = "${params.BUILD_VERSION}"
-        }
-      }
-    }
+      parallel {
+        stage('Set Build Display Name') {
+          steps {
+            script {
+              currentBuild.displayName = "${params.BUILD_VERSION}"
+            }
 
-    stage('Check dotnet version') {
-      steps {
-        // In PATH để kiểm tra xem dotnet có trong PATH hay không
-        bat 'echo %PATH%'
-        bat 'dotnet --version'
+          }
+        }
+
+        stage('Check dotnet version') {
+          steps {
+            bat 'dotnet --version'
+          }
+        }
+
       }
     }
 
@@ -50,10 +44,19 @@ pipeline {
           ]
           // Sử dụng lệnh curl để đẩy file lên server FTP
           bat """
-          curl -T "build-${params.BUILD_VERSION}.zip" -u ${ftpDetails.username}:${ftpDetails.password} ${ftpDetails.url}/${ftpDetails.remoteDir}
+          curl --ftp-port -T "build-${params.BUILD_VERSION}.zip" -u ${ftpDetails.username}:${ftpDetails.password} ${ftpDetails.url}/${ftpDetails.remoteDir}
           """
         }
+
       }
     }
+
+  }
+  environment {
+    CURL_HOME = 'C:\\curl\\bin'
+    PATH = "${CURL_HOME};${env.PATH}"
+  }
+  parameters {
+    string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
   }
 }
