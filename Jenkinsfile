@@ -44,7 +44,7 @@ pipeline {
           ]
           // Sử dụng lệnh curl để đẩy file lên server FTP
           bat """
-          curl --ftp-port -T "build-${params.BUILD_VERSION}.zip" -u ${ftpDetails.username}:${ftpDetails.password} ${ftpDetails.url}/${ftpDetails.remoteDir}
+          curl --ftp-port -T "webapi-${params.BUILD_VERSION}.zip" -u ${ftpDetails.username}:${ftpDetails.password} ${ftpDetails.url}/${ftpDetails.remoteDir}
           """
         }
 
