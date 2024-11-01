@@ -57,7 +57,7 @@ pipeline {
 
   }
   environment {
-    PATH = 'C:\\curl\\bin;${env.PATH}'
+    PATH = 'C:\\\\curl\\\\bin;${env.PATH}'
   }
   parameters {
     string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
