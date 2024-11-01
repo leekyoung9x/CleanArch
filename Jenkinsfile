@@ -29,7 +29,7 @@ pipeline {
 
     stage('Zip file') {
       steps {
-        bat '"\\"C:\\\\Program Files\\\\7-Zip\\\\7z.exe\\" a build-${params.BUILD_VERSION}.zip bin/release"'
+        bat '"C:\\Program Files\\7-Zip\\7z.exe" a "build-${params.BUILD_VERSION}.zip" "bin/release"'
       }
     }
 
