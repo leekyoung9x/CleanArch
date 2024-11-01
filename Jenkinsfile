@@ -27,6 +27,12 @@ pipeline {
       }
     }
 
+    stage('Zip') {
+      steps {
+        bat '"C:\\Program Files\\7-Zip\\7z.exe" a "webapi-${params.BUILD_VERSION}.zip" "CleanArch.Api/bin/Release/net8.0"'
+      }
+    }
+
   }
   parameters {
     string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
