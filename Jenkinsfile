@@ -1,5 +1,11 @@
 pipeline {
   agent any
+
+  // Thêm block `parameters` để khai báo tham số
+  parameters {
+      string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
+  }
+  
   stages {
     stage('Set Build Display Name') {
       parallel {
