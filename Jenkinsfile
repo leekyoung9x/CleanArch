@@ -4,7 +4,7 @@ pipeline {
     stage('Set Build Display Name') {
       environment {
         CURL_HOME = 'C:\\curl\\bin'
-        PATH = "${CURL_HOME};${env.PATH}" 
+        PATH = "${CURL_HOME};${env.PATH}"
       }
       parallel {
         stage('Set Build Display Name') {
@@ -57,7 +57,7 @@ pipeline {
 
   }
   environment {
-    CURL_HOME = 'C:\\\\curl\\\\bin'
+    PATH = 'C:\\curl\\bin;${env.PATH}'
   }
   parameters {
     string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
