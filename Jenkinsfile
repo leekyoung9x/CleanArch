@@ -33,6 +33,24 @@ pipeline {
       }
     }
 
+     stage('Upload to FTP') {
+            steps {
+                script {
+                    // Cấu hình thông tin FTP
+                    def ftpDetails = [
+                        url      : 'ftp://14.225.209.84:21',  // URL của server FTP
+                        username : 'administrator',                // Tên người dùng FTP
+                        password : 'fe64be2a-6e65-11ef-8417-00505690ef05',                // Mật khẩu của FTP
+                        remoteDir: ''             // Đường dẫn thư mục trên FTP
+                    ]
+                    // Sử dụng lệnh curl để đẩy file 'build.zip' lên server FTP
+                    bat """
+                        curl --ftp-port - -T build-${params.BUILD_VERSION}.zip -u ${ftpDetails.username}:${ftpDetails.password} ${ftpDetails.url}${ftpDetails.remoteDir}
+                    """
+                }
+            }
+        }
+
   }
   parameters {
     string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: 'Version number for the build')
