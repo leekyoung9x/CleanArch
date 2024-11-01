@@ -1,13 +1,23 @@
 pipeline {
   agent any
   stages {
-    stage('') {
-      steps {
-        script {
-          currentBuild.displayName = "${params.BUILD_VERSION}"
+    stage('Set Build Display Name') {
+      parallel {
+        stage('Set Build Display Name') {
+          steps {
+            script {
+              currentBuild.displayName = "${params.BUILD_VERSION}"
+            }
+
+          }
         }
 
-        bat 'dotnet --version'
+        stage('Check dotnet version') {
+          steps {
+            bat 'dotnet --version'
+          }
+        }
+
       }
     }
 
