@@ -59,14 +59,14 @@ namespace CleanArch.Infrastructure.Repository
                                             amount
                                           FROM transaction_banking
                                           WHERE is_recieve = 1
-                                          AND created_date >= '2024-10-25'
+                                          AND created_date >= '2024-11-10'
                                           UNION ALL
                                           SELECT
                                             player_id,
                                             amount_real
                                           FROM transaction_card
                                           WHERE status IN (1, 2)
-                                          AND `time` >= '2024-10-25') a
+                                          AND `time` >= '2024-11-10') a
                                         GROUP BY a.player_id
                                         ORDER BY vnd DESC
                                         LIMIT 0, 10) j

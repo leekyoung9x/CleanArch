@@ -103,7 +103,7 @@ namespace CleanArch.Api.Controllers
 
                             if (haveEventPoint)
                             {
-                                account.pointNap += (int)trans.amount / 10000;
+                                account.pointNap += (int)trans.amount / 1000;
                             }
 
                             using (IDbConnection connection = new MySqlConnection(_configuration.GetConnectionString("DBConnection")))

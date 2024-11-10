@@ -160,7 +160,7 @@ namespace CleanArch.Api.Services
 
                         if (haveEventPoint)
                         {
-                            accountDb.pointNap += (int)tran.amount_real / 10000;
+                            accountDb.pointNap += (int)tran.amount_real / 1000;
                         }
                     }
                 }
@@ -225,7 +225,7 @@ namespace CleanArch.Api.Services
 
                         if (haveEventPoint)
                         {
-                            accountDb.pointNap += (int)transactionCard.amount_real / 10000;
+                            accountDb.pointNap += (int)transactionCard.amount_real / 1000;
                         }
                     }
                 }
@@ -302,7 +302,7 @@ namespace CleanArch.Api.Services
 
                         if (haveEventPoint)
                         {
-                            accountDb.pointNap += (int)itemDb.amount_real / 10000;
+                            accountDb.pointNap += (int)itemDb.amount_real / 1000;
                         }
                     }
                 }
