@@ -26,7 +26,12 @@ namespace CleanArch.Infrastructure.Repository
                     string query = @"SELECT
                                       name,
                                       power AS `value`
-                                    FROM player
+                                    FROM player a
+                                      INNER JOIN (SELECT
+                                          id
+                                        FROM account
+                                        WHERE create_time >= '2024-11-18 20:00:00') b
+                                        ON a.account_id = b.id
                                     WHERE name <> 'admin'
                                     ORDER BY power DESC LIMIT 10";
 
@@ -59,14 +64,14 @@ namespace CleanArch.Infrastructure.Repository
                                             amount
                                           FROM transaction_banking
                                           WHERE is_recieve = 1
-                                          AND created_date >= '2024-11-10'
+                                          AND created_date >= '2024-11-18'
                                           UNION ALL
                                           SELECT
                                             player_id,
                                             amount_real
                                           FROM transaction_card
                                           WHERE status IN (1, 2)
-                                          AND `time` >= '2024-11-10') a
+                                          AND `time` >= '2024-11-18') a
                                         GROUP BY a.player_id
                                         ORDER BY vnd DESC
                                         LIMIT 0, 10) j
