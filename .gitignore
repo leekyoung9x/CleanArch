@@ -3,6 +3,7 @@
 ################################################################################
 
 /.vs/CleanArch
+/.vs/
 /CleanArch.Api/bin/
 /CleanArch.Api/obj
 /CleanArch.Api/CleanArch.Api.csproj.user
