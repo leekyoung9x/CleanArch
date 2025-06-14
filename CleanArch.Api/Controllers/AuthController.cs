@@ -28,8 +28,8 @@ namespace CleanArch.Api.Controllers
 
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            var isValidCaptcha = await reCaptchaService.IsValidCaptchaAsync(model.token);
+            if (isValidCaptcha)
             {
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
                 var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
@@ -65,8 +65,8 @@ namespace CleanArch.Api.Controllers
 
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            var isValidCaptcha = await reCaptchaService.IsValidCaptchaAsync(model.token);
+            if (isValidCaptcha)
             {
                 var authService = _serviceProvider.GetRequiredService<IAuthService>();
                 var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();
@@ -128,8 +128,8 @@ namespace CleanArch.Api.Controllers
             {
                 var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-                var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-                if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+                var isValidCaptcha = await reCaptchaService.IsValidCaptchaAsync(model.token);
+                if (isValidCaptcha)
                 {
                     var authService = _serviceProvider.GetRequiredService<IAuthService>();
                     var accountRepository = _serviceProvider.GetRequiredService<IAccountRepository>();

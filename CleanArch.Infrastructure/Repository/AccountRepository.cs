@@ -63,14 +63,16 @@ namespace CleanArch.Infrastructure.Repository
         public async Task<bool> Register(string username, string password, string ip)
         {
             int vnd = 0;
+            int active = 0;
 
             int.TryParse(configuration["NroConfig:VndRegister"], out vnd);
+            int.TryParse(configuration["NroConfig:ActiveRegister"], out active);
 
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
             {
                 string tableName = GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string query = $"INSERT INTO {tableName}(`username`, `password`, `ip_address`, `vnd`) VALUES (@username, @password, @ip, @vnd)";
+                string query = $"INSERT INTO {tableName}(`username`, `password`, `ip_address`, `vnd`, `active`) VALUES (@username, @password, @ip, @vnd, @active)";
 
                 var result = await connection.ExecuteAsync(query, new
                 {
@@ -78,6 +80,7 @@ namespace CleanArch.Infrastructure.Repository
                     password = password,
                     ip = ip,
                     vnd = vnd,
+                    active = active,
                 });
 
                 return result > 0;

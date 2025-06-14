@@ -34,8 +34,8 @@ namespace CleanArch.Api.Controllers
 
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(chargingRequest.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            var isValidCaptcha = await reCaptchaService.IsValidCaptchaAsync(chargingRequest.token);
+            if (isValidCaptcha)
             {
                 int id = GetAccountId();
                 int playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(id);
@@ -161,8 +161,8 @@ namespace CleanArch.Api.Controllers
 
             var reCaptchaService = _serviceProvider.GetRequiredService<IReCaptchaService>();
 
-            var recaptchaResponse = await reCaptchaService.VerifyTokenAsync(model.token);
-            if (recaptchaResponse != null && recaptchaResponse.TokenProperties.Valid && recaptchaResponse.RiskAnalysis.Score >= (float)0.9)
+            var isValidCaptcha = await reCaptchaService.IsValidCaptchaAsync(model.token);
+            if (isValidCaptcha)
             {
                 int id = GetAccountId();
                 var cardService = _serviceProvider.GetRequiredService<ICardService>();

@@ -47,5 +47,15 @@ namespace CleanArch.Api.Services
 
             return reCaptchaResponse;
         }
+
+        public async Task<bool> IsValidCaptchaAsync(string token)
+        {
+            var response = await VerifyTokenAsync(token);
+            var minimumScore = _configuration.GetValue<float>("ReCaptcha:MinimumScore");
+            
+            return response != null && 
+                   response.TokenProperties?.Valid == true && 
+                   response.RiskAnalysis?.Score >= minimumScore;
+        }
     }
 }
