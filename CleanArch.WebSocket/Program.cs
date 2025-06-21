@@ -27,7 +27,7 @@ var configuration = builder.Configuration;
 // Cấu hình Kestrel
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(6000); // Lắng nghe trên tất cả IP tại cổng 5000
+    serverOptions.ListenAnyIP(5001); // Lắng nghe trên tất cả IP tại cổng 5000
 });
 
 var app = builder.Build();
