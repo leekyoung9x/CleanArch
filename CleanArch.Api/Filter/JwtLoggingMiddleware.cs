@@ -13,12 +13,7 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Headers.ContainsKey("Authorization"))
-            {
-                var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                Console.WriteLine($"Received token: {token}");
-            }
-
+            // Removed JWT token logging for security reasons
             await _next(context);
         }
     }
