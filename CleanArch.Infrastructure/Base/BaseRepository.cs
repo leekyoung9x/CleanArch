@@ -95,7 +95,7 @@ namespace CleanArch.Infrastructure.Base
             }
         }
 
-        public async Task<bool> DeleteAsync(long id)
+        public virtual async Task<bool> DeleteAsync(long id)
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
             {
@@ -133,7 +133,7 @@ namespace CleanArch.Infrastructure.Base
             }
         }
 
-        public async Task<T?> GetByIdAsync(long Id)
+        public virtual async Task<T?> GetByIdAsync(long Id)
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
             {

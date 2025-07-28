@@ -1,0 +1,296 @@
+using CleanArch.Api.Models;
+using CleanArch.Application.Interfaces;
+using CleanArch.Core.Entities;
+using CleanArch.Core.Entities.ResponseModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
+
+namespace CleanArch.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MilestoneRewardController : BaseApiController
+    {
+        public MilestoneRewardController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ApiResponse<List<MilestoneReward>>> GetAll()
+        {
+            var apiResponse = new ApiResponse<List<MilestoneReward>>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetAllAsync();
+                apiResponse.Success = true;
+                apiResponse.Result = data.ToList();
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<MilestoneReward>> GetById(int id)
+        {
+            var apiResponse = new ApiResponse<MilestoneReward>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetByIdAsync(id);
+                if (data != null)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Result = data;
+                }
+                else
+                {
+                    apiResponse.Success = false;
+                    apiResponse.Message = "Milestone reward not found";
+                }
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("with-packages")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<List<MilestoneReward>>> GetAllWithPackages()
+        {
+            var apiResponse = new ApiResponse<List<MilestoneReward>>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetAllWithPackagesAsync();
+                apiResponse.Success = true;
+                apiResponse.Result = data.ToList();
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("by-score/{score}")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<List<MilestoneReward>>> GetByScore(long score)
+        {
+            var apiResponse = new ApiResponse<List<MilestoneReward>>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetMilestonesByScoreAsync(score);
+                apiResponse.Success = true;
+                apiResponse.Result = data.ToList();
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("required-score/{requiredScore}")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<MilestoneReward>> GetByRequiredScore(long requiredScore)
+        {
+            var apiResponse = new ApiResponse<MilestoneReward>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetByRequiredScoreAsync(requiredScore);
+                if (data != null)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Result = data;
+                }
+                else
+                {
+                    apiResponse.Success = false;
+                    apiResponse.Message = "Milestone reward not found";
+                }
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("client-format/{userId}/{userScore}")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<List<MilestoneRewardResponse>>> GetMilestoneRewardsForClient(long userId, long userScore)
+        {
+            var apiResponse = new ApiResponse<List<MilestoneRewardResponse>>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetMilestoneRewardsForClientAsync(userId, userScore);
+                apiResponse.Success = true;
+                apiResponse.Result = data.ToList();
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpGet("all-milestones/{userId}/{userScore}")]
+        [AllowAnonymous]
+        public async Task<ApiResponse<List<MilestoneRewardResponse>>> GetAllMilestoneRewardsForClient(long userId, long userScore)
+        {
+            var apiResponse = new ApiResponse<List<MilestoneRewardResponse>>();
+
+            try
+            {
+                var data = await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(userId, userScore);
+                apiResponse.Success = true;
+                apiResponse.Result = data.ToList();
+                apiResponse.Message = $"Retrieved {data.Count()} milestone rewards";
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpPost]
+        public async Task<ApiResponse<bool>> Create([FromBody] MilestoneReward milestoneReward)
+        {
+            var apiResponse = new ApiResponse<bool>();
+
+            try
+            {
+                var result = await _unitOfWork.MilestoneRewards.AddAsync(milestoneReward);
+                apiResponse.Success = result;
+                apiResponse.Result = result;
+                apiResponse.Message = result ? "Milestone reward created successfully" : "Failed to create milestone reward";
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpPut]
+        public async Task<ApiResponse<bool>> Update([FromBody] MilestoneReward milestoneReward)
+        {
+            var apiResponse = new ApiResponse<bool>();
+
+            try
+            {
+                var result = await _unitOfWork.MilestoneRewards.UpdateAsync(milestoneReward);
+                apiResponse.Success = result;
+                apiResponse.Result = result;
+                apiResponse.Message = result ? "Milestone reward updated successfully" : "Failed to update milestone reward";
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ApiResponse<bool>> Delete(int id)
+        {
+            var apiResponse = new ApiResponse<bool>();
+
+            try
+            {
+                var result = await _unitOfWork.MilestoneRewards.DeleteAsync(id);
+                apiResponse.Success = result;
+                apiResponse.Result = result;
+                apiResponse.Message = result ? "Milestone reward deleted successfully" : "Failed to delete milestone reward";
+            }
+            catch (SqlException ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
+            }
+
+            return apiResponse;
+        }
+    }
+}

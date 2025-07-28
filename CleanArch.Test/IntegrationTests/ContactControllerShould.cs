@@ -33,7 +33,7 @@ namespace CleanArch.Test.IntegrationTests
             var transactionRepository = new TransactionBanking(_configuration);
             var transactionCardRepository = new TransactionCardRepository(_configuration);
             var postRepository = new PostRepository(_configuration);
-            var unitofWork = new UnitOfWork(accountRepository, rankRepository, transactionRepository, transactionCardRepository, postRepository);
+            //var unitofWork = new UnitOfWork(accountRepository, rankRepository, transactionRepository, transactionCardRepository, postRepository);
             _moqRepo = new Mock<IUnitOfWork>();
         }
 
