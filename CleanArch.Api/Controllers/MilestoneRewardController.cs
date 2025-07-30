@@ -16,6 +16,40 @@ namespace CleanArch.Api.Controllers
         {
         }
 
+        private int GetAccountId()
+        {
+            // Lấy ClaimsPrincipal từ HttpContext
+            var user = HttpContext.User;
+
+            // Lấy claim từ ClaimsPrincipal
+            var idClaim = user.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(idClaim))
+                throw new UnauthorizedAccessException("Account ID not found in token");
+            
+            int claimValue = int.Parse(idClaim);
+            return claimValue;
+        }
+
+        private int? TryGetAccountId()
+        {
+            try
+            {
+                // Lấy ClaimsPrincipal từ HttpContext
+                var user = HttpContext.User;
+
+                // Lấy claim từ ClaimsPrincipal
+                var idClaim = user?.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(idClaim))
+                    return null;
+                
+                return int.Parse(idClaim);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<ApiResponse<List<MilestoneReward>>> GetAll()
@@ -162,15 +196,28 @@ namespace CleanArch.Api.Controllers
             return apiResponse;
         }
 
-        [HttpGet("client-format/{userId}/{userScore}")]
+        [HttpGet("client-format")]
         [AllowAnonymous]
-        public async Task<ApiResponse<List<MilestoneRewardResponse>>> GetMilestoneRewardsForClient(long userId, long userScore)
+        public async Task<ApiResponse<List<MilestoneRewardResponse>>> GetMilestoneRewardsForClient()
         {
             var apiResponse = new ApiResponse<List<MilestoneRewardResponse>>();
 
             try
             {
-                var data = await _unitOfWork.MilestoneRewards.GetMilestoneRewardsForClientAsync(userId, userScore);
+                int id = GetAccountId();
+                int playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(id);
+
+                if (playerId == 0)
+                {
+                    apiResponse.Success = false;
+                    apiResponse.Message = "Bạn chưa tạo nhân vật";
+                    return apiResponse;
+                }
+
+                // Lấy điểm nạp từ server thay vì truyền từ client
+                int userScore = await _unitOfWork.Accounts.GetPlayerAccumulateByPlayerId(playerId);
+
+                var data = await _unitOfWork.MilestoneRewards.GetMilestoneRewardsForClientAsync(playerId, userScore);
                 apiResponse.Success = true;
                 apiResponse.Result = data.ToList();
             }
@@ -188,31 +235,76 @@ namespace CleanArch.Api.Controllers
             return apiResponse;
         }
 
-        [HttpGet("all-milestones/{userId}/{userScore}")]
+        [HttpGet("all-milestones")]
         [AllowAnonymous]
-        public async Task<ApiResponse<List<MilestoneRewardResponse>>> GetAllMilestoneRewardsForClient(long userId, long userScore)
+        public async Task<ServiceResult> GetAllMilestoneRewardsForClient()
         {
-            var apiResponse = new ApiResponse<List<MilestoneRewardResponse>>();
+            ServiceResult result = new ServiceResult();
 
             try
             {
-                var data = await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(userId, userScore);
-                apiResponse.Success = true;
-                apiResponse.Result = data.ToList();
-                apiResponse.Message = $"Retrieved {data.Count()} milestone rewards";
+                // Thử lấy account ID từ token (có thể null nếu chưa đăng nhập)
+                int? accountId = TryGetAccountId();
+                int playerId = 0;
+                int totalAccumulate = 0;
+
+                // Nếu đã đăng nhập, lấy thông tin player
+                if (accountId.HasValue)
+                {
+                    playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(accountId.Value);
+                    
+                    if (playerId > 0)
+                    {
+                        // Lấy tổng điểm nạp từ server
+                        totalAccumulate = await _unitOfWork.Accounts.GetPlayerAccumulateByPlayerId(playerId);
+                    }
+                }
+
+                // Lấy danh sách milestone rewards
+                List<MilestoneRewardResponse> data;
+                
+                if (playerId > 0)
+                {
+                    // Đã đăng nhập và có player - lấy đầy đủ thông tin bao gồm claimable/claimed
+                    data = (await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(playerId, totalAccumulate)).ToList();
+                }
+                else
+                {
+                    // Chưa đăng nhập hoặc chưa tạo nhân vật - chỉ lấy thông tin cơ bản
+                    var basicData = await _unitOfWork.MilestoneRewards.GetAllAsync();
+                    data = basicData.Select(m => new MilestoneRewardResponse
+                    {
+                        Id = m.Id,
+                        Amount = m.RequiredScore,
+                        // Không set claimable và claimed cho user chưa đăng nhập
+                        Claimable = false,
+                        Claimed = false,
+                        Current = false,
+                        Items = new List<MilestoneItemResponse>() // Để trống list items
+                    }).ToList();
+                }
+
+                result.Status = true;
+                result.StatusMessage = $"Retrieved {data.Count} milestone rewards";
+                result.Data = new
+                {
+                    TotalAccumulate = totalAccumulate,
+                    IsLoggedIn = accountId.HasValue && playerId > 0,
+                    MilestoneRewards = data
+                };
             }
             catch (SqlException ex)
             {
-                apiResponse.Success = false;
-                apiResponse.Message = ex.Message;
+                result.Status = false;
+                result.StatusMessage = ex.Message;
             }
             catch (Exception ex)
             {
-                apiResponse.Success = false;
-                apiResponse.Message = ex.Message;
+                result.Status = false;
+                result.StatusMessage = ex.Message;
             }
 
-            return apiResponse;
+            return result;
         }
 
         [HttpPost]
