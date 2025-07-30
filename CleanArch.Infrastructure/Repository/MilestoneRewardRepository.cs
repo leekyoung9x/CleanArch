@@ -354,7 +354,7 @@ namespace CleanArch.Infrastructure.Repository
                                 var itemResponse = new MilestoneItemResponse
                                 {
                                     Id = itemId,
-                                    Icon = IconHelper.GetIconByIconId(row.ItemIconId ?? 0),
+                                    Icon = row.ItemIconId.ToString(),
                                     Qty = row.quantity ?? 1,
                                     Name = row.ItemName ?? "Unknown Item",
                                     Stats = new List<ItemStatResponse>()
@@ -405,7 +405,7 @@ namespace CleanArch.Infrastructure.Repository
                                                 var optionTypeText = GetOptionTypeText(optionInfo.TYPE);
                                                 itemResponse.Stats.Add(new ItemStatResponse 
                                                 { 
-                                                    Label = optionTypeText ?? "Thuộc tính", 
+                                                    Label = "Thuộc tính", 
                                                     Value = optionName 
                                                 });
                                             }
