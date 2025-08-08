@@ -298,8 +298,8 @@ namespace CleanArch.Infrastructure.Repository
                 {
                     const string query = @"
                         SELECT 
-                            mr.id,
-                            mr.milestone_name,
+                            mr.id as Id,
+                            mr.milestone_name as MilestoneName,
                             mr.required_score as Amount,
                             CASE WHEN umc.user_id IS NOT NULL THEN 1 ELSE 0 END as Claimed,
                             CASE WHEN mr.required_score <= @UserScore AND umc.user_id IS NULL THEN 1 ELSE 0 END as Claimable,
@@ -308,9 +308,9 @@ namespace CleanArch.Infrastructure.Repository
                                 FROM milestone_rewards 
                                 WHERE required_score > @UserScore
                             ) THEN 1 ELSE 0 END as Current,
-                            rpc.item_id,
-                            rpc.quantity,
-                            rpc.options,
+                            rpc.item_id as ItemId,
+                            rpc.quantity as Quantity,
+                            rpc.options as Options,
                             it.NAME as ItemName,
                             it.icon_id as ItemIconId,
                             it.TYPE as ItemType,
@@ -321,14 +321,14 @@ namespace CleanArch.Infrastructure.Repository
                         LEFT JOIN item_template it ON rpc.item_id = it.id
                         ORDER BY mr.required_score ASC, rpc.item_id";
 
-                    var result = await connection.QueryAsync(query, new { UserId = userId, UserScore = userScore });
+                    var result = await connection.QueryAsync<MilestoneRewardQueryResult>(query, new { UserId = userId, UserScore = userScore });
 
                     // Group và process dữ liệu
                     var milestoneDict = new Dictionary<int, MilestoneRewardResponse>();
 
                     foreach (var row in result)
                     {
-                        var milestoneId = (int)row.id;
+                        var milestoneId = row.Id;
 
                         if (!milestoneDict.TryGetValue(milestoneId, out var milestone))
                         {
@@ -344,9 +344,9 @@ namespace CleanArch.Infrastructure.Repository
                             milestoneDict.Add(milestoneId, milestone);
                         }
 
-                        if (row.item_id != null)
+                        if (row.ItemId.HasValue)
                         {
-                            var itemId = row.item_id.ToString();
+                            var itemId = row.ItemId.Value.ToString();
                             var existingItem = milestone.Items.FirstOrDefault(i => i.Id == itemId);
 
                             if (existingItem == null)
@@ -354,8 +354,8 @@ namespace CleanArch.Infrastructure.Repository
                                 var itemResponse = new MilestoneItemResponse
                                 {
                                     Id = itemId,
-                                    Icon = row.ItemIconId.ToString(),
-                                    Qty = row.quantity ?? 1,
+                                    Icon = row.ItemIconId?.ToString() ?? "0",
+                                    Qty = row.Quantity ?? 1,
                                     Name = row.ItemName ?? "Unknown Item",
                                     Stats = new List<ItemStatResponse>()
                                 };
@@ -373,11 +373,11 @@ namespace CleanArch.Infrastructure.Repository
                                 }
 
                                 // Process options from JSON - Method 2  
-                                if (!string.IsNullOrEmpty(row.options))
+                                if (!string.IsNullOrEmpty(row.Options))
                                 {
                                     try
                                     {
-                                        var options = JsonConvert.DeserializeObject<List<RewardPackageContentOption>>(row.options);
+                                        var options = JsonConvert.DeserializeObject<List<RewardPackageContentOption>>(row.Options);
                                         foreach (var option in options)
                                         {
                                             // Query để lấy thông tin option từ item_option_template
