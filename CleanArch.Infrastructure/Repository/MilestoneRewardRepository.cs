@@ -265,7 +265,7 @@ namespace CleanArch.Infrastructure.Repository
                 10 => "Vàng",
                 11 => "Hộp quà",
                 12 => "Ngọc",
-                _ => $"Type {itemType.Value}"
+                _ => $"Vật phẩm đạo cụ"
             };
         }
 
