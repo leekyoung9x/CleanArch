@@ -143,7 +143,7 @@ namespace CleanArch.Infrastructure.Repository
                     foreach (var row in result)
                     {
                         var milestoneId = (int)row.id;
-                        
+
                         if (!milestoneDict.TryGetValue(milestoneId, out var milestone))
                         {
                             milestone = new MilestoneRewardResponse
@@ -162,7 +162,7 @@ namespace CleanArch.Infrastructure.Repository
                         {
                             var itemId = row.item_id.ToString();
                             var existingItem = milestone.Items.FirstOrDefault(i => i.Id == itemId);
-                            
+
                             if (existingItem == null)
                             {
                                 var itemResponse = new MilestoneItemResponse
@@ -180,7 +180,7 @@ namespace CleanArch.Infrastructure.Repository
                                 {
                                     itemResponse.Stats.Add(new ItemStatResponse { Label = "Loại", Value = itemTypeText });
                                 }
-                                
+
                                 if (!string.IsNullOrEmpty(row.ItemDescription))
                                 {
                                     itemResponse.Stats.Add(new ItemStatResponse { Label = "Mô tả", Value = row.ItemDescription });
@@ -199,9 +199,9 @@ namespace CleanArch.Infrastructure.Repository
                                                 SELECT id, NAME, TYPE 
                                                 FROM item_option_template 
                                                 WHERE id = @OptionId";
-                                            
+
                                             var optionInfo = await connection.QuerySingleOrDefaultAsync(
-                                                optionQuery, 
+                                                optionQuery,
                                                 new { OptionId = option.Id }
                                             );
 
@@ -209,18 +209,18 @@ namespace CleanArch.Infrastructure.Repository
                                             {
                                                 var optionName = optionInfo.NAME ?? "Unknown";
                                                 var optionValue = option.Value?.ToString() ?? "0";
-                                                
+
                                                 // Replace # with actual value in option name
                                                 if (optionName.Contains("#"))
                                                 {
                                                     optionName = optionName.Replace("#", optionValue);
                                                 }
-                                                
+
                                                 var optionTypeText = GetOptionTypeText(optionInfo.TYPE);
-                                                itemResponse.Stats.Add(new ItemStatResponse 
-                                                { 
-                                                    Label = optionTypeText ?? "Thuộc tính", 
-                                                    Value = optionName 
+                                                itemResponse.Stats.Add(new ItemStatResponse
+                                                {
+                                                    Label = optionTypeText ?? "Thuộc tính",
+                                                    Value = optionName
                                                 });
                                             }
                                         }
@@ -249,7 +249,7 @@ namespace CleanArch.Infrastructure.Repository
         private string GetItemTypeText(int? itemType)
         {
             if (!itemType.HasValue) return "Unknown";
-            
+
             return itemType.Value switch
             {
                 0 => "Áo",
@@ -272,11 +272,11 @@ namespace CleanArch.Infrastructure.Repository
         private string GetOptionTypeText(int? optionType)
         {
             if (!optionType.HasValue) return "Thuộc tính";
-            
+
             return optionType.Value switch
             {
                 0 => "Sức mạnh",
-                1 => "Thể lực", 
+                1 => "Thể lực",
                 2 => "Chính xác",
                 3 => "Phản ứng",
                 4 => "HP",
@@ -329,7 +329,7 @@ namespace CleanArch.Infrastructure.Repository
                     foreach (var row in result)
                     {
                         var milestoneId = (int)row.id;
-                        
+
                         if (!milestoneDict.TryGetValue(milestoneId, out var milestone))
                         {
                             milestone = new MilestoneRewardResponse
@@ -348,7 +348,7 @@ namespace CleanArch.Infrastructure.Repository
                         {
                             var itemId = row.item_id.ToString();
                             var existingItem = milestone.Items.FirstOrDefault(i => i.Id == itemId);
-                            
+
                             if (existingItem == null)
                             {
                                 var itemResponse = new MilestoneItemResponse
@@ -366,7 +366,7 @@ namespace CleanArch.Infrastructure.Repository
                                 {
                                     itemResponse.Stats.Add(new ItemStatResponse { Label = "Loại", Value = itemTypeText });
                                 }
-                                
+
                                 if (!string.IsNullOrEmpty(row.ItemDescription))
                                 {
                                     itemResponse.Stats.Add(new ItemStatResponse { Label = "Mô tả", Value = row.ItemDescription });
@@ -385,9 +385,9 @@ namespace CleanArch.Infrastructure.Repository
                                                 SELECT id, NAME, TYPE 
                                                 FROM item_option_template 
                                                 WHERE id = @OptionId";
-                                            
+
                                             var optionInfo = await connection.QuerySingleOrDefaultAsync(
-                                                optionQuery, 
+                                                optionQuery,
                                                 new { OptionId = option.Id }
                                             );
 
@@ -395,18 +395,18 @@ namespace CleanArch.Infrastructure.Repository
                                             {
                                                 var optionName = optionInfo.NAME ?? "Unknown";
                                                 var optionValue = option.Value?.ToString() ?? "0";
-                                                
+
                                                 // Replace # with actual value in option name
                                                 if (optionName.Contains("#"))
                                                 {
                                                     optionName = optionName.Replace("#", optionValue);
                                                 }
-                                                
+
                                                 var optionTypeText = GetOptionTypeText(optionInfo.TYPE);
-                                                itemResponse.Stats.Add(new ItemStatResponse 
-                                                { 
-                                                    Label = "Thuộc tính", 
-                                                    Value = optionName 
+                                                itemResponse.Stats.Add(new ItemStatResponse
+                                                {
+                                                    Label = "Thuộc tính",
+                                                    Value = optionName
                                                 });
                                             }
                                         }

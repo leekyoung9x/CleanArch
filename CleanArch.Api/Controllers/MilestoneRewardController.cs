@@ -25,7 +25,7 @@ namespace CleanArch.Api.Controllers
             var idClaim = user.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(idClaim))
                 throw new UnauthorizedAccessException("Account ID not found in token");
-            
+
             int claimValue = int.Parse(idClaim);
             return claimValue;
         }
@@ -41,7 +41,7 @@ namespace CleanArch.Api.Controllers
                 var idClaim = user?.FindFirst("id")?.Value;
                 if (string.IsNullOrEmpty(idClaim))
                     return null;
-                
+
                 return int.Parse(idClaim);
             }
             catch
@@ -237,9 +237,9 @@ namespace CleanArch.Api.Controllers
 
         [HttpGet("all-milestones")]
         [AllowAnonymous]
-        public async Task<ServiceResult> GetAllMilestoneRewardsForClient()
+        public async Task<ApiResponse<object>> GetAllMilestoneRewardsForClient()
         {
-            ServiceResult result = new ServiceResult();
+            var apiResponse = new ApiResponse<object>();
 
             try
             {
@@ -252,7 +252,7 @@ namespace CleanArch.Api.Controllers
                 if (accountId.HasValue)
                 {
                     playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(accountId.Value);
-                    
+
                     if (playerId > 0)
                     {
                         // Lấy tổng điểm nạp từ server
@@ -261,50 +261,49 @@ namespace CleanArch.Api.Controllers
                 }
 
                 // Lấy danh sách milestone rewards
-                List<MilestoneRewardResponse> data;
-                
+                List<MilestoneRewardResponse> milestoneRewards;
+
                 if (playerId > 0)
                 {
                     // Đã đăng nhập và có player - lấy đầy đủ thông tin bao gồm claimable/claimed
-                    data = (await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(playerId, totalAccumulate)).ToList();
+                    milestoneRewards = (await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(playerId, totalAccumulate)).ToList();
                 }
                 else
                 {
-                    // Chưa đăng nhập hoặc chưa tạo nhân vật - chỉ lấy thông tin cơ bản
-                    var basicData = await _unitOfWork.MilestoneRewards.GetAllAsync();
-                    data = basicData.Select(m => new MilestoneRewardResponse
+                    // Chưa đăng nhập - vẫn lấy đầy đủ milestone rewards nhưng không có thông tin claim
+                    // Sử dụng playerId = 0 và userScore = 0 để lấy basic milestone data với items
+                    milestoneRewards = (await _unitOfWork.MilestoneRewards.GetAllMilestoneRewardsForClientAsync(0, 0)).ToList();
+
+                    // Set tất cả claimable và claimed = false cho user chưa đăng nhập
+                    foreach (var milestone in milestoneRewards)
                     {
-                        Id = m.Id,
-                        Amount = m.RequiredScore,
-                        // Không set claimable và claimed cho user chưa đăng nhập
-                        Claimable = false,
-                        Claimed = false,
-                        Current = false,
-                        Items = new List<MilestoneItemResponse>() // Để trống list items
-                    }).ToList();
+                        milestone.Claimable = false;
+                        milestone.Claimed = false;
+                        milestone.Current = false;
+                    }
                 }
 
-                result.Status = true;
-                result.StatusMessage = $"Retrieved {data.Count} milestone rewards";
-                result.Data = new
+                apiResponse.Success = true;
+                apiResponse.Message = $"Retrieved {milestoneRewards.Count} milestone rewards";
+                apiResponse.Result = new
                 {
                     TotalAccumulate = totalAccumulate,
                     IsLoggedIn = accountId.HasValue && playerId > 0,
-                    MilestoneRewards = data
+                    MilestoneRewards = milestoneRewards
                 };
             }
             catch (SqlException ex)
             {
-                result.Status = false;
-                result.StatusMessage = ex.Message;
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                result.Status = false;
-                result.StatusMessage = ex.Message;
+                apiResponse.Success = false;
+                apiResponse.Message = ex.Message;
             }
 
-            return result;
+            return apiResponse;
         }
 
         [HttpPost]
