@@ -18,7 +18,8 @@ namespace CleanArch.Infrastructure.Repository
             ILeaderboardRewardRepository leaderboardRewards,
             IUserLeaderboardClaimRepository userLeaderboardClaims,
             IItemTemplateRepository itemTemplates,
-            IItemOptionTemplateRepository itemOptionTemplates)
+            IItemOptionTemplateRepository itemOptionTemplates,
+            IGiftCodeRepository giftCodes)
         {
             Accounts = accounts;
             Ranks = ranks;
@@ -34,6 +35,7 @@ namespace CleanArch.Infrastructure.Repository
             UserLeaderboardClaims = userLeaderboardClaims;
             ItemTemplates = itemTemplates;
             ItemOptionTemplates = itemOptionTemplates;
+            GiftCodes = giftCodes;
         }
 
         public IAccountRepository Accounts { get; set; }
@@ -54,5 +56,8 @@ namespace CleanArch.Infrastructure.Repository
         // Item System Repositories
         public IItemTemplateRepository ItemTemplates { get; set; }
         public IItemOptionTemplateRepository ItemOptionTemplates { get; set; }
+        
+        // Gift Code Repository
+        public IGiftCodeRepository GiftCodes { get; set; }
     }
 }

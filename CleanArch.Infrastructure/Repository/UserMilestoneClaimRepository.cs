@@ -110,5 +110,53 @@ namespace CleanArch.Infrastructure.Repository
                 }
             }
         }
+
+        public override async Task<bool> AddAsync(UserMilestoneClaim entity)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                int rowsEffected = 0;
+                try
+                {
+                    const string query = @"
+                        INSERT INTO user_milestone_claims (user_id, milestone_id, claimed_at, gift_code_id)
+                        VALUES (@UserId, @MilestoneId, @ClaimedAt, @GiftCodeId)";
+
+                    rowsEffected = await connection.ExecuteAsync(query, entity);
+                }
+                catch (Exception ex) { }
+
+                return rowsEffected > 0;
+            }
+        }
+
+        public async Task<bool> AddAsync(UserMilestoneClaim entity, IDbConnection connection, IDbTransaction transaction)
+        {
+            if (connection == null)
+            {
+                throw new ArgumentNullException(nameof(connection), "Connection cannot be null.");
+            }
+
+            if (transaction == null)
+            {
+                throw new ArgumentNullException(nameof(transaction), "Transaction cannot be null.");
+            }
+
+            int rowsEffected = 0;
+            try
+            {
+                const string query = @"
+                    INSERT INTO user_milestone_claims (user_id, milestone_id, claimed_at, gift_code_id)
+                    VALUES (@UserId, @MilestoneId, @ClaimedAt, @GiftCodeId)";
+
+                rowsEffected = await connection.ExecuteAsync(query, entity, transaction);
+            }
+            catch (Exception ex) 
+            {
+                throw;
+            }
+
+            return rowsEffected > 0;
+        }
     }
 }

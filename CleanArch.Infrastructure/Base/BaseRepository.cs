@@ -19,7 +19,7 @@ namespace CleanArch.Infrastructure.Base
             this.configuration = configuration;
         }
 
-        public async Task<bool> AddAsync(T entity)
+        public virtual async Task<bool> AddAsync(T entity)
         {
             using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
             {

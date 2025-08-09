@@ -20,5 +20,8 @@
         // Item System Repositories
         IItemTemplateRepository ItemTemplates { get; }
         IItemOptionTemplateRepository ItemOptionTemplates { get; }
+        
+        // Gift Code Repository
+        IGiftCodeRepository GiftCodes { get; }
     }
 }

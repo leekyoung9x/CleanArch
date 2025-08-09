@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System.Data;
+using RewardPackageContentOption = CleanArch.Core.Entities.ResponseModel.RewardPackageContentOption;
 
 namespace CleanArch.Infrastructure.Repository
 {
@@ -191,7 +192,7 @@ namespace CleanArch.Infrastructure.Repository
                                 {
                                     try
                                     {
-                                        var options = JsonConvert.DeserializeObject<List<RewardPackageContentOption>>(row.options);
+                                        var options = JsonConvert.DeserializeObject<List<Core.Entities.RewardPackageContentOption>>(row.options);
                                         foreach (var option in options)
                                         {
                                             // Query để lấy thông tin option từ item_option_template

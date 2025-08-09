@@ -21,8 +21,9 @@ namespace CleanArch.Infrastructure.Repository
                 try
                 {
                     const string query = @"
-                        SELECT rp.*, rpc.package_id as PackageId, rpc.item_id as ItemId, 
-                               rpc.quantity as Quantity, rpc.options as Options
+                        SELECT rp.id, rp.name, rp.description,
+                               rpc.package_id as PackageId, rpc.item_id, 
+                               rpc.quantity as Quantity, rpc.options
                         FROM reward_packages rp
                         LEFT JOIN reward_package_contents rpc ON rp.id = rpc.package_id
                         WHERE rp.id = @Id";
@@ -40,7 +41,8 @@ namespace CleanArch.Infrastructure.Repository
                                 packageDict.Add(package.Id, packageEntry);
                             }
 
-                            if (content != null && content.PackageId > 0)
+                            // Chỉ add content khi có ItemId (không null)
+                            if (content != null && content.ItemId > 0)
                             {
                                 packageEntry.RewardPackageContents.Add(content);
                             }
@@ -68,7 +70,8 @@ namespace CleanArch.Infrastructure.Repository
                 try
                 {
                     const string query = @"
-                        SELECT rp.*, rpc.package_id as PackageId, rpc.item_id as ItemId, 
+                        SELECT rp.id, rp.name, rp.description,
+                               rpc.package_id as PackageId, rpc.item_id as ItemId, 
                                rpc.quantity as Quantity, rpc.options as Options
                         FROM reward_packages rp
                         LEFT JOIN reward_package_contents rpc ON rp.id = rpc.package_id
@@ -87,7 +90,8 @@ namespace CleanArch.Infrastructure.Repository
                                 packageDict.Add(package.Id, packageEntry);
                             }
 
-                            if (content != null && content.PackageId > 0)
+                            // Chỉ add content khi có ItemId (không null)
+                            if (content != null && content.ItemId > 0)
                             {
                                 packageEntry.RewardPackageContents.Add(content);
                             }

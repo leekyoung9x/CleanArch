@@ -16,8 +16,14 @@ namespace CleanArch.Core.Entities
         [Required]
         public DateTime ClaimedAt { get; set; } = DateTime.Now;
 
+        [Column("gift_code_id")]
+        public long? GiftCodeId { get; set; }
+
         // Navigation properties
         [ForeignKey("MilestoneId")]
         public virtual MilestoneReward MilestoneReward { get; set; }
+
+        [ForeignKey("GiftCodeId")]
+        public virtual GiftCode GiftCode { get; set; }
     }
 }

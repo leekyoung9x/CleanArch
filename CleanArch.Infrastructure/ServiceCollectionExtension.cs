@@ -31,6 +31,9 @@ namespace CleanArch.Infrastructure
             services.AddTransient<IItemTemplateRepository, ItemTemplateRepository>();
             services.AddTransient<IItemOptionTemplateRepository, ItemOptionTemplateRepository>();
             
+            // Gift Code Repository
+            services.AddTransient<IGiftCodeRepository, GiftCodeRepository>();
+            
             services.AddTransient(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
