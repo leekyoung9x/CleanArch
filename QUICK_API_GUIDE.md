@@ -66,6 +66,31 @@ GET /api/UserMilestoneClaim/user/{userId}/milestone/{milestoneId}/claimed
 GET /api/UserMilestoneClaim/user/{userId}
 ```
 
+### Get my claim history (NEW)
+```
+GET /api/UserMilestoneClaim/history
+Headers: Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "status": true,
+  "statusMessage": "Lấy lịch sử thành công",
+  "data": [
+    {
+      "milestoneId": 1,
+      "milestoneName": "Mốc 10,000 VND",
+      "requiredScore": 10000,
+      "rewardPackageName": "Gói quà 10K",
+      "claimedAt": "2025-08-09T15:30:00",
+      "giftCode": "ABC1234567",
+      "giftCodeId": 123
+    }
+  ]
+}
+```
+
 ## Flow Logic
 1. Check if user already claimed → Hide button if yes
 2. Check if user meets requirement → Enable button if yes  

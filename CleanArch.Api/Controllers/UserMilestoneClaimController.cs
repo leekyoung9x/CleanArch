@@ -306,6 +306,40 @@ namespace CleanArch.Api.Controllers
             return result;
         }
 
+        [HttpGet("history")]
+        public async Task<ServiceResult> GetMyClaimHistory()
+        {
+            var result = new ServiceResult();
+            result.Status = false;
+            result.StatusMessage = "Có lỗi xảy ra";
+
+            try
+            {
+                // Lấy thông tin user từ token
+                int accountId = GetAccountId();
+                int playerId = await _unitOfWork.Accounts.GetPlayerIdByAccountId(accountId);
+
+                if (playerId == 0)
+                {
+                    result.StatusMessage = "Bạn chưa tạo nhân vật";
+                    return result;
+                }
+
+                // Lấy lịch sử nhận thưởng
+                var history = await _unitOfWork.UserMilestoneClaims.GetClaimHistoryByUserIdAsync(playerId);
+
+                result.Status = true;
+                result.StatusMessage = "Lấy lịch sử thành công";
+                result.Data = history.ToList();
+            }
+            catch (Exception ex)
+            {
+                result.StatusMessage = $"Lỗi: {ex.Message}";
+            }
+
+            return result;
+        }
+
         private async Task<GiftCode> ConvertRewardPackageToGiftCode(RewardPackage rewardPackage)
         {
             try
@@ -349,13 +383,13 @@ namespace CleanArch.Api.Controllers
                 // Tạo gift code entity
                 var giftCode = new GiftCode
                 {
-                    Type = 0, // Personal gift code
+                    Type = 2, // Personal gift code
                     Code = await _unitOfWork.GiftCodes.GenerateUniqueGiftCodeAsync(),
                     Gold = 0,
                     Gem = 0,
                     Ruby = 0,
                     Items = JsonConvert.SerializeObject(giftCodeItems).ToLower(),
-                    Status = 1, // Active
+                    Status = 0, // Active
                     Active = 0, // Không yêu cầu kích hoạt
                     ExpiresAt = DateTime.Now.AddYears(5), // Hết hạn sau 5 năm
                     CreatedAt = DateTime.Now,

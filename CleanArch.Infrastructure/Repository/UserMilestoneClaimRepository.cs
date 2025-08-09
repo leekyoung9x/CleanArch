@@ -1,5 +1,6 @@
 using CleanArch.Application.Interfaces;
 using CleanArch.Core.Entities;
+using CleanArch.Core.Entities.ResponseModel;
 using CleanArch.Infrastructure.Base;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -157,6 +158,39 @@ namespace CleanArch.Infrastructure.Repository
             }
 
             return rowsEffected > 0;
+        }
+
+        public async Task<IEnumerable<MilestoneClaimHistoryResponse>> GetClaimHistoryByUserIdAsync(long userId)
+        {
+            using (IDbConnection connection = new MySqlConnection(configuration.GetConnectionString("DBConnection")))
+            {
+                try
+                {
+                    const string query = @"
+                        SELECT 
+                            umc.milestone_id as MilestoneId,
+                            mr.milestone_name as MilestoneName,
+                            mr.required_score as RequiredScore,
+                            rp.name as RewardPackageName,
+                            umc.claimed_at as ClaimedAt,
+                            gc.code as GiftCode,
+                            umc.gift_code_id as GiftCodeId
+                        FROM user_milestone_claims umc
+                        LEFT JOIN milestone_rewards mr ON umc.milestone_id = mr.id
+                        LEFT JOIN reward_packages rp ON mr.reward_package_id = rp.id  
+                        LEFT JOIN gift_codes gc ON umc.gift_code_id = gc.id
+                        WHERE umc.user_id = @UserId
+                        ORDER BY umc.claimed_at DESC";
+
+                    var result = await connection.QueryAsync<MilestoneClaimHistoryResponse>(query, new { UserId = userId });
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    // Log exception
+                    return new List<MilestoneClaimHistoryResponse>();
+                }
+            }
         }
     }
 }

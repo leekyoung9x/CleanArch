@@ -26,7 +26,18 @@ export interface UserMilestoneClaim {
   userId: number;
   milestoneId: number;
   claimedAt: string; // ISO date string
+  giftCodeId?: number;
   milestoneReward?: MilestoneReward;
+}
+
+export interface MilestoneClaimHistoryResponse {
+  milestoneId: number;
+  milestoneName: string;
+  requiredScore: number;
+  rewardPackageName: string;
+  claimedAt: string; // ISO date string
+  giftCode: string;
+  giftCodeId?: number;
 }
 
 export interface MilestoneReward {
@@ -56,6 +67,7 @@ export interface MilestoneApiClient {
   checkMilestoneClaimed(userId: number, milestoneId: number): Promise<ApiResponse<boolean>>;
   getUserClaimedMilestones(userId: number): Promise<ApiResponse<UserMilestoneClaim[]>>;
   getRecentClaims(limit?: number): Promise<ApiResponse<UserMilestoneClaim[]>>;
+  getMyClaimHistory(): Promise<ServiceResult<MilestoneClaimHistoryResponse[]>>;
 }
 
 // ============================================
@@ -161,6 +173,16 @@ export class MilestoneAPI implements MilestoneApiClient {
   async getRecentClaims(limit = 10): Promise<ApiResponse<UserMilestoneClaim[]>> {
     return this.makeRequest<ApiResponse<UserMilestoneClaim[]>>(
       `/api/UserMilestoneClaim/recent?limit=${limit}`
+    );
+  }
+
+  /**
+   * Get my milestone claim history
+   * @returns Promise with array of claim history
+   */
+  async getMyClaimHistory(): Promise<ServiceResult<MilestoneClaimHistoryResponse[]>> {
+    return this.makeRequest<ServiceResult<MilestoneClaimHistoryResponse[]>>(
+      `/api/UserMilestoneClaim/history`
     );
   }
 }

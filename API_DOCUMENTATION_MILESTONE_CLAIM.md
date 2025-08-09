@@ -78,6 +78,35 @@ Authorization: Bearer <JWT_TOKEN>
 
 ## 🔍 Endpoint Hỗ trợ
 
+### **GET** `/api/UserMilestoneClaim/history`
+
+Lấy lịch sử nhận thưởng của người chơi hiện tại.
+
+#### **Headers**
+```http
+Content-Type: application/json
+Authorization: Bearer <JWT_TOKEN>
+```
+
+#### **Response**
+```json
+{
+  "status": boolean,
+  "statusMessage": "string",
+  "data": [
+    {
+      "milestoneId": 1,
+      "milestoneName": "Mốc 10,000 VND",
+      "requiredScore": 10000,
+      "rewardPackageName": "Gói quà 10K",
+      "claimedAt": "2025-08-09T15:30:00",
+      "giftCode": "ABC1234567",
+      "giftCodeId": 123
+    }
+  ]
+}
+```
+
 ### **GET** `/api/UserMilestoneClaim/user/{userId}/milestone/{milestoneId}/claimed`
 
 Kiểm tra xem user đã nhận mốc thưởng chưa.
